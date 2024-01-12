@@ -1,48 +1,60 @@
 package city.org.rs;
 
+import java.sql.Date;
+
 public class DailyRecord {
-    private int recordId;
-    private int patientId; // Foreign key to Patients table
+    private int record_id;
+    private int patient_id; // Foreign key to Patients table
     private java.sql.Date date;
-    private double bloodGlucoseLevel;
-    private double carbIntake;
-    private double medicationDose;
+    private double blood_glucose_level;
+    private double carb_intake;
+    private int medication_id;
+    private double medication_dose ;
+    
+
+    
 
     // Constructor
-    public DailyRecord(int recordId, int patientId, java.sql.Date date, 
-                       double bloodGlucoseLevel, double carbIntake, double medicationDose) {
-        this.recordId = recordId;
-        this.patientId = patientId;
+    public DailyRecord(int record_id, int patient_id, java.sql.Date date, 
+                       double blood_glucose_level, double carb_intake, double medication_dose, int medication_id) {
+        this.record_id = record_id;
+        this.patient_id= patient_id;
         this.date = date;
-        this.bloodGlucoseLevel = bloodGlucoseLevel;
-        this.carbIntake = carbIntake;
-        this.medicationDose = medicationDose;
+        this.blood_glucose_level = blood_glucose_level;
+        this.carb_intake = carb_intake;
+        this.medication_id = medication_id;
+        this.medication_dose  = medication_dose ;
+        
     }
     
   //Constructor 2
-  	public DailyRecord(int recordId) {
-  		 this.recordId = recordId;
+  	public DailyRecord(int record_id) {
+  		 this.record_id = record_id;
   		 }
 
   	//Constructor 3
   	public DailyRecord() {
   	}
 
-    // Getters and Setters
-    public int getRecordId() {
-        return recordId;
+    public DailyRecord(int int1, int int2, Date date2, double double1, double double2, int int3, double double3) {
+        //TODO Auto-generated constructor stub
     }
 
-    public void setRecordId(int recordId) {
-        this.recordId = recordId;
+    // Getters and Setters
+    public int getRecordId() {
+        return record_id;
+    }
+
+    public void setRecordId(int record_id) {
+        this.record_id = record_id;
     }
 
     public int getPatientId() {
-        return patientId;
+        return patient_id;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatientId(int patient_id) {
+        this.patient_id = patient_id;
     }
 
     public java.sql.Date getDate() {
@@ -53,39 +65,51 @@ public class DailyRecord {
         this.date = date;
     }
 
-    public double getBloodGlucoseLevel() {
-        return bloodGlucoseLevel;
+    public double blood_glucose_level() {
+        return blood_glucose_level;
     }
 
-    public void setBloodGlucoseLevel(double bloodGlucoseLevel) {
-        this.bloodGlucoseLevel = bloodGlucoseLevel;
+    public void setBloodGlucoseLevel(double blood_glucose_level) {
+        this.blood_glucose_level = blood_glucose_level;
+    }
+    
+    public double getBloodGlucoseLevel() {
+        return blood_glucose_level;
     }
 
     public double getCarbIntake() {
-        return carbIntake;
+        return carb_intake;
     }
 
-    public void setCarbIntake(double carbIntake) {
-        this.carbIntake = carbIntake;
+    public void setCarbIntake(double carb_intake) {
+        this.carb_intake = carb_intake;
     }
 
     public double getMedicationDose() {
-        return medicationDose;
+        return medication_dose ;
     }
 
-    public void setMedicationDose(double medicationDose) {
-        this.medicationDose = medicationDose;
+    public void setMedicationDose(double medication_dose ) {
+        this.medication_dose  = medication_dose ;
     }
 
+    public int getMedication_id() {
+        return medication_id;
+    }
+
+    public void setMedication_id(int medication_id) {
+        this.medication_id = medication_id;
+    }
     @Override
     public String toString() {
         return "DailyRecord{" +
-               "recordId=" + recordId +
-               ", patientId=" + patientId +
+               "record_id=" + record_id +
+               ", patient_id=" + patient_id +
                ", date=" + date +
-               ", bloodGlucoseLevel=" + bloodGlucoseLevel +
-               ", carbIntake=" + carbIntake +
-               ", medicationDose=" + medicationDose +
+               ", blood_glucose_level=" + blood_glucose_level +
+               ", carb_intake=" + carb_intake +
+               ", medication_id =" + medication_id +
+               ", medication_dose =" + medication_dose +
                '}';
     }
 }
