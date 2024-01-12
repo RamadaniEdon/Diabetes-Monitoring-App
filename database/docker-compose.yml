@@ -9,6 +9,8 @@ services:
       MYSQL_PASSWORD: mysql
     ports:
       - "3306:3306"
+    volumes:
+      - ./mydb.sql:/docker-entrypoint-initdb.d/mydb.sql
 
   adminer-container:
     image: adminer:latest
