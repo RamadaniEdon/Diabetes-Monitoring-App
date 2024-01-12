@@ -35,7 +35,7 @@ public class ProductResource {
 	/* NOTE:
 	 * ----
 	 * When the below method is invoked by a request it returns a response inside a Response object.
-	 * Response is a class that CANNOT be instantiated directly (e.g. through the "new" command).
+	 * Response is a class that CANNOT b instantiated directly (e.g. through the "new" command).
 	 * Instead, it uses the so called "builder design pattern" whereby object creation is delegated 
 	 * to a set of builders (hence the .build() method call below). This is because responses are complex 
 	 * entities: a response comprises 3 lines (status line, headers, body) and, if headers are present, they may 
