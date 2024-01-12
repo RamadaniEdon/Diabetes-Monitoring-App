@@ -1,14 +1,14 @@
 package city.org.rs;
 
 public class User {
-    private int userId;
+    private int user_id;
     private String username;
     private String password;
     private String role;
 
     // Constructor
-    public User(int userId, String username, String password, String role) {
-        this.userId = userId;
+    public User(int user_id, String username, String password, String role) {
+        this.user_id = user_id;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -16,7 +16,7 @@ public class User {
     
     //Constructor 2
   	public User(int userId) {
-        this.userId = userId;
+        this.user_id = userId;
   	}
 
   	//Constructor 3
@@ -25,11 +25,11 @@ public class User {
 
     // Getters and Setters
     public int getUserId() {
-        return userId;
+        return user_id;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.user_id = userId;
     }
 
     public String getUsername() {
@@ -60,7 +60,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-               "userId=" + userId +
+               "userId=" + user_id +
                ", username='" + username + '\'' +
                ", password='" + password + '\'' +
                ", role='" + role + '\'' +

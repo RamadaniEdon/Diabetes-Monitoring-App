@@ -2,6 +2,7 @@ package city.org.rs;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.List;
 
 import jakarta.ws.rs.Consumes;
@@ -18,22 +19,31 @@ import jakarta.ws.rs.core.Response;
 @Path("/dailyrecords")
 public class DailyRecordResource {
 
-    private DailyRecordDAO dao = DailyRecordDAO.getInstance();
-
     // API to list all daily records
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<DailyRecord> listDailyRecords() {
-        return dao.getAllDailyRecords();
+    public Response listDailyRecords() {
+        DailyRecordDAO dao = new DailyRecordDAO();
+        try {
+            List<DailyRecord> records = dao.getAllDailyRecords();
+            return Response.ok(records, MediaType.APPLICATION_JSON).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily records").build();
+        }
     }
 
     // API to insert new daily record
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addDailyRecord(DailyRecord record) throws URISyntaxException {
-        dao.addDailyRecord(record);
-        URI uri = new URI("/dailyrecords/" + record.getRecordId());
-        return Response.created(uri).build();
+    public Response addDailyRecord(DailyRecord record) {
+        DailyRecordDAO dao = new DailyRecordDAO();
+        try {
+            dao.addDailyRecord(record);
+            URI uri = new URI("/dailyrecords/" + record.getRecordId());
+            return Response.created(uri).build();
+        } catch (SQLException | URISyntaxException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding daily record").build();
+        }
     }
 
     // API to update existing daily record
@@ -41,11 +51,13 @@ public class DailyRecordResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
     public Response updateDailyRecord(@PathParam("id") int id, DailyRecord record) {
-        record.setRecordId(id);
-        if (dao.updateDailyRecord(record)) {
+        DailyRecordDAO dao = new DailyRecordDAO();
+        try {
+            record.setRecordId(id);
+            dao.updateDailyRecord(record);
             return Response.ok().build();
-        } else {
-            return Response.notModified().build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error updating daily record").build();
         }
     }
 
@@ -53,10 +65,12 @@ public class DailyRecordResource {
     @DELETE
     @Path("{id}")
     public Response deleteDailyRecord(@PathParam("id") int id) {
-        if (dao.deleteDailyRecord(id)) {
+        DailyRecordDAO dao = new DailyRecordDAO();
+        try {
+            dao.deleteDailyRecord(id);
             return Response.ok().build();
-        } else {
-            return Response.notModified().build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error deleting daily record").build();
         }
     }
 
@@ -65,11 +79,16 @@ public class DailyRecordResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDailyRecord(@PathParam("id") int id) {
-        DailyRecord record = dao.getDailyRecord(id);
-        if (record != null) {
-            return Response.ok(record, MediaType.APPLICATION_JSON).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        DailyRecordDAO dao = new DailyRecordDAO();
+        try {
+            DailyRecord record = dao.getDailyRecord(id);
+            if (record != null) {
+                return Response.ok(record, MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily record").build();
         }
     }
 }

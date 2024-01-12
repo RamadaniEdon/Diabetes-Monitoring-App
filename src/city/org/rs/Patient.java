@@ -1,24 +1,24 @@
 package city.org.rs;
 
 public class Patient {
-    private int patientId;
+    private int patient_id;
     private String name;
     private int age;
     private String gender;
-    private int userId; // Foreign key to Users table
+    private int user_id; // Foreign key to Users table
 
     // Constructor
-    public Patient(int patientId, String name, int age, String gender, int userId) {
-        this.patientId = patientId;
+    public Patient(int patient_id, String name, int age, String gender, int userId) {
+        this.patient_id = patient_id;
         this.name = name;
         this.age = age;
         this.gender = gender;
-        this.userId = userId;
+        this.user_id = user_id;
     }
     
     //Constructor 2
-  	public Patient(int patientId) {
-        this.patientId = patientId;
+  	public Patient(int patient_id) {
+        this.patient_id = patient_id;
   	}
 
   	//Constructor 3
@@ -27,11 +27,11 @@ public class Patient {
 
     // Getters and Setters
     public int getPatientId() {
-        return patientId;
+        return patient_id;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatientId(int patient_id) {
+        this.patient_id = patient_id;
     }
 
     public String getName() {
@@ -59,21 +59,21 @@ public class Patient {
     }
 
     public int getUserId() {
-        return userId;
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserId(int user_id) {
+        this.user_id = user_id;
     }
 
     @Override
     public String toString() {
         return "Patient{" +
-               "patientId=" + patientId +
+               "patient_id=" + patient_id +
                ", name='" + name + '\'' +
                ", age=" + age +
                ", gender='" + gender + '\'' +
-               ", userId=" + userId +
+               ", user_id=" + user_id +
                '}';
     }
 }
