@@ -5,7 +5,7 @@ import java.sql.Date;
 public class DailyRecord {
     private int record_id;
     private int patient_id; // Foreign key to Patients table
-    private java.sql.Date date;
+    private String date;
     private double blood_glucose_level;
     private double carb_intake;
     private int medication_id;
@@ -15,7 +15,7 @@ public class DailyRecord {
     
 
     // Constructor
-    public DailyRecord(int record_id, int patient_id, java.sql.Date date, 
+    public DailyRecord(int record_id, int patient_id, String date, 
                        double blood_glucose_level, double carb_intake, int medication_id, double medication_dose) {
         this.record_id = record_id;
         this.patient_id= patient_id;
@@ -53,11 +53,11 @@ public class DailyRecord {
         this.patient_id = patient_id;
     }
 
-    public java.sql.Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(java.sql.Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

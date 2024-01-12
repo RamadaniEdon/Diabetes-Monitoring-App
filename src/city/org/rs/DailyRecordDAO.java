@@ -13,7 +13,7 @@ public class DailyRecordDAO {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, record.getRecordId());
             statement.setInt(2, record.getPatientId());
-            statement.setDate(3, record.getDate());
+            statement.setString(3, record.getDate());
             statement.setDouble(4, record.getBloodGlucoseLevel());
             statement.setDouble(5, record.getCarbIntake());
             statement.setInt(6, record.getMedication_id());
@@ -33,7 +33,7 @@ public class DailyRecordDAO {
                 return new DailyRecord(
                     resultSet.getInt("record_id"),
                     resultSet.getInt("patient_id"),
-                    resultSet.getDate("date"),
+                    resultSet.getString("date"),
                     resultSet.getDouble("blood_glucose_level"),
                     resultSet.getDouble("carb_intake"),
                     resultSet.getInt("medication_id"),
@@ -51,7 +51,7 @@ public class DailyRecordDAO {
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, record.getPatientId());
-            statement.setDate(2, record.getDate());
+            statement.setString(2, record.getDate());
             statement.setDouble(3, record.getBloodGlucoseLevel());
             statement.setDouble(4, record.getCarbIntake());
             statement.setInt(5, record.getMedication_id());
@@ -82,7 +82,7 @@ public class DailyRecordDAO {
                 records.add(new DailyRecord(
                     resultSet.getInt("record_id"),
                     resultSet.getInt("patient_id"),
-                    resultSet.getDate("date"),
+                    resultSet.getString("date"),
                     resultSet.getDouble("blood_glucose_level"),
                     resultSet.getDouble("carb_intake"),
                     resultSet.getInt("medication_id"),
@@ -106,7 +106,7 @@ public class DailyRecordDAO {
                     records.add(new DailyRecord(
                         resultSet.getInt("record_id"),
                     resultSet.getInt("patient_id"),
-                    resultSet.getDate("date"),
+                    resultSet.getString("date"),
                     resultSet.getDouble("blood_glucose_level"),
                     resultSet.getDouble("carb_intake"),
                     resultSet.getInt("medication_id"),
