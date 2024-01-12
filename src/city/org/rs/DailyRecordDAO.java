@@ -92,4 +92,61 @@ public class DailyRecordDAO {
         }
         return records;
     }
+
+    // Method to get daily records within a specified period
+    public List<DailyRecord> getDailyRecordsInPeriod(Date startDate, Date endDate) throws SQLException {
+        List<DailyRecord> records = new ArrayList<>();
+        String sql = "SELECT * FROM DailyRecords WHERE date >= ? AND date <= ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, startDate);
+            statement.setDate(2, endDate);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    records.add(new DailyRecord(
+                        resultSet.getInt("record_id"),
+                    resultSet.getInt("patient_id"),
+                    resultSet.getDate("date"),
+                    resultSet.getDouble("blood_glucose_level"),
+                    resultSet.getDouble("carb_intake"),
+                    resultSet.getInt("medication_id"),
+                    resultSet.getDouble("medication_dose")
+                    ));
+                }
+            }
+        }
+        return records;
+    }
+
+    // Method to calculate the average blood glucose level over a specified period
+    public Double getAverageBloodGlucoseLevel(Date startDate, Date endDate) throws SQLException {
+        String sql = "SELECT AVG(blood_glucose_level) FROM DailyRecords WHERE date >= ? AND date <= ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, startDate);
+            statement.setDate(2, endDate);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDouble(1);
+                }
+            }
+        }
+        return null;
+    }
+
+    // Method to calculate the average carb intake over a specified period
+    public Double getAverageCarbIntake(Date startDate, Date endDate) throws SQLException {
+        String sql = "SELECT AVG(carb_intake) FROM DailyRecords WHERE date >= ? AND date <= ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, startDate);
+            statement.setDate(2, endDate);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDouble(1);
+                }
+            }
+        }
+        return null;
+    }
 }
