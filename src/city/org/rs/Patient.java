@@ -16,7 +16,7 @@ public class Patient {
         this.userId = userId;
     }
     
-  //Constructor 2
+    //Constructor 2
   	public Patient(int patientId) {
         this.patientId = patientId;
   	}
