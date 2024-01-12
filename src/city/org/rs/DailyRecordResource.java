@@ -94,48 +94,48 @@ public class DailyRecordResource {
         }
     }
 
-     @GET
-    @Path("/period")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response listDailyRecordsInPeriod(@QueryParam("startDate") Date startDate,
-                                             @QueryParam("endDate") Date endDate) {
-        DailyRecordDAO dao = new DailyRecordDAO();
-        try {
-            List<DailyRecord> records = dao.getDailyRecordsInPeriod(startDate, endDate);
-            return Response.ok(records, MediaType.APPLICATION_JSON).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily records").build();
-        }
-    }
+    //  @GET
+    // @Path("/period")
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response listDailyRecordsInPeriod(@QueryParam("startDate") Date startDate,
+    //                                          @QueryParam("endDate") Date endDate) {
+    //     DailyRecordDAO dao = new DailyRecordDAO();
+    //     try {
+    //         List<DailyRecord> records = dao.getDailyRecordsInPeriod(startDate, endDate);
+    //         return Response.ok(records, MediaType.APPLICATION_JSON).build();
+    //     } catch (SQLException e) {
+    //         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily records").build();
+    //     }
+    // }
 
-    // API to get the average daily blood glucose level over a specified period
-    @GET
-    @Path("/average/bloodglucose")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAverageGlucose(@QueryParam("startDate") Date startDate,
-                                      @QueryParam("endDate") Date endDate) {
-        DailyRecordDAO dao = new DailyRecordDAO();
-        try {
-            Double averageGlucose = dao.getAverageBloodGlucoseLevel(startDate, endDate);
-            return Response.ok(averageGlucose).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error calculating average glucose level").build();
-        }
-    }
+    // // API to get the average daily blood glucose level over a specified period
+    // @GET
+    // @Path("/average/bloodglucose")
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response getAverageGlucose(@QueryParam("startDate") Date startDate,
+    //                                   @QueryParam("endDate") Date endDate) {
+    //     DailyRecordDAO dao = new DailyRecordDAO();
+    //     try {
+    //         Double averageGlucose = dao.getAverageBloodGlucoseLevel(startDate, endDate);
+    //         return Response.ok(averageGlucose).build();
+    //     } catch (SQLException e) {
+    //         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error calculating average glucose level").build();
+    //     }
+    // }
 
-    // API to get the average carb intake over a specified period
-    @GET
-    @Path("/average/carb")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAverageCarbIntake(@QueryParam("startDate") Date startDate,
-                                         @QueryParam("endDate") Date endDate) {
-        DailyRecordDAO dao = new DailyRecordDAO();
-        try {
-            Double averageCarbIntake = dao.getAverageCarbIntake(startDate, endDate);
-            return Response.ok(averageCarbIntake).build();
-        } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error calculating average carb intake").build();
-        }
-    }
+    // // API to get the average carb intake over a specified period
+    // @GET
+    // @Path("/average/carb")
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response getAverageCarbIntake(@QueryParam("startDate") Date startDate,
+    //                                      @QueryParam("endDate") Date endDate) {
+    //     DailyRecordDAO dao = new DailyRecordDAO();
+    //     try {
+    //         Double averageCarbIntake = dao.getAverageCarbIntake(startDate, endDate);
+    //         return Response.ok(averageCarbIntake).build();
+    //     } catch (SQLException e) {
+    //         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error calculating average carb intake").build();
+    //     }
+    // }
     
 }

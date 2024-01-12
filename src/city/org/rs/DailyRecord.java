@@ -16,7 +16,7 @@ public class DailyRecord {
 
     // Constructor
     public DailyRecord(int record_id, int patient_id, java.sql.Date date, 
-                       double blood_glucose_level, double carb_intake, double medication_dose, int medication_id) {
+                       double blood_glucose_level, double carb_intake, int medication_id, double medication_dose) {
         this.record_id = record_id;
         this.patient_id= patient_id;
         this.date = date;
@@ -35,10 +35,6 @@ public class DailyRecord {
   	//Constructor 3
   	public DailyRecord() {
   	}
-
-    public DailyRecord(int int1, int int2, Date date2, double double1, double double2, int int3, double double3) {
-        //TODO Auto-generated constructor stub
-    }
 
     // Getters and Setters
     public int getRecordId() {
