@@ -12,6 +12,11 @@ package city.org.rs.models;
             this.unit = unit;
         }
     
+        public Medication(String medication_name, String unit) {
+            this.medication_name = medication_name;
+            this.unit = unit;
+        }
+
         // Default constructor
         public Medication() {
         }

@@ -11,13 +11,13 @@ public class UserDAO {
 
     // Method to add a new user
     public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO Users (user_id, username, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (username, password, role) VALUES (?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, user.getUserId());
-            statement.setString(2, user.getUsername());
-            statement.setString(3, user.getPassword());
-            statement.setString(4, user.getRole());
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            // statement.setInt(1, user.getUserId());
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getRole());
             statement.executeUpdate();
         }
     }
