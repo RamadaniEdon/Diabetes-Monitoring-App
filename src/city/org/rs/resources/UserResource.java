@@ -114,6 +114,7 @@ public class UserResource {
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving user").build();
         }
-        
+
     }
+
 }

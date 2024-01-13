@@ -15,6 +15,13 @@ public class Patient {
         this.gender = gender;
         this.user_id = user_id;
     }
+
+    public Patient(String name, int age, String gender, int userId) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.user_id = user_id;
+    }
     
     //Constructor 2
   	public Patient(int patient_id) {

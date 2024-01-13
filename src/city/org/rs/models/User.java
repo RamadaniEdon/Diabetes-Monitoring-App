@@ -13,6 +13,12 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
+    public User(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
     
     //Constructor 2
   	public User(int userId) {
