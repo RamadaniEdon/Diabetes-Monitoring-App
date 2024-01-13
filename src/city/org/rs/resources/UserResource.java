@@ -104,7 +104,7 @@ public class UserResource {
         UserDAO dao = new UserDAO();
         try {
             User userFromDB = dao.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
-            if(userFromDB != null) {
+            if (userFromDB != null) {
                 String token = JwtUtil.createToken(userFromDB.getUsername(), userFromDB.getPassword());
                 return Response.ok(token, MediaType.APPLICATION_JSON).build();
             } else {
@@ -113,6 +113,7 @@ public class UserResource {
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving user").build();
         }
-        
+
     }
+
 }

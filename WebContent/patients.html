@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Management</title>
+    <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <style>
+        /* Add your CSS styling here */
+    </style>
+</head>
+<body>
+    <h2>Add Patient</h2>
+    <form id="addPatientForm">
+        Name: <input type="text" id="name" required><br>
+        Age: <input type="number" id="age" required><br>
+        Gender: <input type="text" id="gender" required><br>
+        User ID: <input type="number" id="userId" required><br>
+        <button type="submit">Add Patient</button>
+    </form>
+
+    <script>
+        $(document).ready(function(){
+            $("#addPatientForm").on('submit', function(e){
+                e.preventDefault();
+                addPatient();
+            });
+        });
+
+        function addPatient() {
+    var patientData = {
+        name: $("#name").val(),
+        age: $("#age").val(),
+        gender: $("#gender").val(),
+        userId: $("#user_id").val() // Make sure this matches the ID in your HTML
+    };
+
+    $.ajax({
+        url: 'http://localhost:8080/MyWebsite-0.0.1-SNAPSHOT/rest/patients', // Update with your correct URL
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json', // Expect a JSON response
+        data: JSON.stringify(patientData),
+        success: function(response) {
+            alert('Patient added successfully!');
+        },
+        error: function(xhr, status, error) {
+            alert('Error adding patient: ' + xhr.status + ' ' + xhr.responseText);
+        }
+    });
+}
+
+
+    </script>
+</body>
+</html>
