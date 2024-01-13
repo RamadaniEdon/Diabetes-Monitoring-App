@@ -83,4 +83,24 @@ public class UserDAO {
         }
         return users;
     }
+
+    public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE username = ? AND password = ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                    resultSet.getInt("user_id"),
+                    resultSet.getString("username"),
+                    resultSet.getString("password"),
+                    resultSet.getString("role")
+                );
+            } else {
+                return null;
+            }
+        }
+    }
 }

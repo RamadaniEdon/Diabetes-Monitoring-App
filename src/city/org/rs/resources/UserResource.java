@@ -7,6 +7,7 @@ import java.util.List;
 
 import city.org.rs.dao.UserDAO;
 import city.org.rs.models.User;
+import city.org.rs.utils.JwtUtil;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -93,5 +94,25 @@ public class UserResource {
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving user").build();
         }
+    }
+
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(User user) {
+        UserDAO dao = new UserDAO();
+        try {
+            User userFromDB = dao.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+            if(userFromDB != null) {
+                String token = JwtUtil.createToken(userFromDB.getUsername(), userFromDB.getPassword());
+                return Response.ok(token, MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving user").build();
+        }
+        
     }
 }
