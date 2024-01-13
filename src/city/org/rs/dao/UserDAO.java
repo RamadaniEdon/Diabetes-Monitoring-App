@@ -16,10 +16,9 @@ public class UserDAO {
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
-            statement.setInt(1, user.getUserId());
-            statement.setString(2, user.getUsername());
-            statement.setString(3, hashedPassword);
-            statement.setString(4, user.getRole());
+            statement.setString(1, user.getUsername());
+            statement.setString(2, hashedPassword);
+            statement.setString(3, user.getRole());
             statement.executeUpdate();
         }
     }
