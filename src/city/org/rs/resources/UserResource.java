@@ -1,10 +1,13 @@
-package city.org.rs;
+package city.org.rs.resources;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.List;
 
+import city.org.rs.dao.UserDAO;
+import city.org.rs.models.User;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;

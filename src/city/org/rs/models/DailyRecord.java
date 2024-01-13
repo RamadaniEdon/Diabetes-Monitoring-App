@@ -1,4 +1,4 @@
-package city.org.rs;
+package city.org.rs.models;
 
 import java.sql.Date;
 

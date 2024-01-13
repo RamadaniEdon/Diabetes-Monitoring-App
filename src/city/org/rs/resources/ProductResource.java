@@ -1,10 +1,12 @@
 
-package city.org.rs;
+package city.org.rs.resources;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import city.org.rs.dao.ProductDAO;
+import city.org.rs.models.Product;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;

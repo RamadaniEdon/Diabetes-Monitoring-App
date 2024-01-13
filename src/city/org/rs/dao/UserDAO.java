@@ -1,8 +1,11 @@
-package city.org.rs;
+package city.org.rs.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import city.org.rs.ConnectionUtility;
+import city.org.rs.models.User;
 
 public class UserDAO {
 

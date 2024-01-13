@@ -1,4 +1,4 @@
-package city.org.rs;
+package city.org.rs.models;
 
 public class User {
     private int user_id;

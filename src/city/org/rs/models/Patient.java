@@ -1,4 +1,4 @@
-package city.org.rs;
+package city.org.rs.models;
 
 public class Patient {
     private int patient_id;

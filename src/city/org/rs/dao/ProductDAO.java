@@ -1,7 +1,9 @@
-package city.org.rs;
+package city.org.rs.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import city.org.rs.models.Product;
 
 //Singleton class
 public final class ProductDAO {
