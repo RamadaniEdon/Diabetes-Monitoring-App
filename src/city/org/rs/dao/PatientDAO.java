@@ -11,14 +11,13 @@ public class PatientDAO {
 
     // Method to add a new patient
     public void addPatient(Patient patient) throws SQLException {
-        String sql = "INSERT INTO Patients (patient_id, name, age, gender, user_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Patients (name, age, gender, user_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, patient.getPatientId());
-            statement.setString(2, patient.getName());
-            statement.setInt(3, patient.getAge());
-            statement.setString(4, patient.getGender());
-            statement.setInt(5, patient.getUserId());
+            statement.setString(1, patient.getName());
+            statement.setInt(2, patient.getAge());
+            statement.setString(3, patient.getGender());
+            statement.setInt(4, patient.getUserId());
             statement.executeUpdate();
         }
     }

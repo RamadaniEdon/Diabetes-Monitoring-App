@@ -11,12 +11,11 @@ public class MedicationDAO {
 
     // Method to add a new medication
     public void addMedication(Medication medication) throws SQLException {
-        String sql = "INSERT INTO Medications (medication_id, medication_name, unit) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Medications (medication_name, unit) VALUES (?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, medication.getMedicationId());
-            statement.setString(2, medication.getMedicationName());
-            statement.setString(3, medication.getUnit());
+            statement.setString(1, medication.getMedicationName());
+            statement.setString(2, medication.getUnit());
             statement.executeUpdate();
         }
     }

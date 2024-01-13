@@ -11,16 +11,15 @@ public class DailyRecordDAO {
 
     // Method to add a new daily record
     public void addDailyRecord(DailyRecord record) throws SQLException {
-        String sql = "INSERT INTO DailyRecords (record_id, patient_id, date, blood_glucose_level, carb_intake, medication_id, medication_dose) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DailyRecords (patient_id, date, blood_glucose_level, carb_intake, medication_id, medication_dose) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, record.getRecordId());
-            statement.setInt(2, record.getPatientId());
-            statement.setString(3, record.getDate());
-            statement.setDouble(4, record.getBloodGlucoseLevel());
-            statement.setDouble(5, record.getCarbIntake());
-            statement.setInt(6, record.getMedication_id());
-            statement.setDouble(7, record.getMedicationDose());
+            statement.setInt(1, record.getPatientId());
+            statement.setString(2, record.getDate());
+            statement.setDouble(3, record.getBloodGlucoseLevel());
+            statement.setDouble(4, record.getCarbIntake());
+            statement.setInt(5, record.getMedication_id());
+            statement.setDouble(6, record.getMedicationDose());
             statement.executeUpdate();
         }
     }

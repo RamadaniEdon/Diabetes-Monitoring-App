@@ -26,6 +26,17 @@ public class DailyRecord {
         this.medication_dose  = medication_dose ;
         
     }
+
+    public DailyRecord(int patient_id, String date, 
+                       double blood_glucose_level, double carb_intake, int medication_id, double medication_dose) {
+        this.patient_id= patient_id;
+        this.date = date;
+        this.blood_glucose_level = blood_glucose_level;
+        this.carb_intake = carb_intake;
+        this.medication_id = medication_id;
+        this.medication_dose  = medication_dose ;
+        
+    }
     
   //Constructor 2
   	public DailyRecord(int record_id) {
