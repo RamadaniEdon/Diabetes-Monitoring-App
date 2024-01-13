@@ -33,6 +33,14 @@ public class JwtUtil {
         return verifier.verify(token);
     }
 
+    public static String getDecodedUsername(DecodedJWT decodedJWT) {
+        return decodedJWT.getClaim("username").asString();
+    }
+
+    public static String getDecodedPassword(DecodedJWT decodedJWT) {
+        return decodedJWT.getClaim("password").asString();
+    }
+
     // Example usage
     public static void main(String[] args) {
         String username = "john_doe";
@@ -45,8 +53,8 @@ public class JwtUtil {
         // Verify and decode JWT
         DecodedJWT decodedJWT = verifyToken(token);
         System.out.println("Decoded JWT:");
-        System.out.println("Username: " + decodedJWT.getClaim("username").asString());
-        System.out.println("Password: " + decodedJWT.getClaim("password").asString());
+        System.out.println("Username: " + getDecodedUsername(decodedJWT));
+        System.out.println("Password: " + getDecodedPassword(decodedJWT));
         Date expirationDate = decodedJWT.getExpiresAt();
         System.out.println("Expiration Date: " + expirationDate);
     }

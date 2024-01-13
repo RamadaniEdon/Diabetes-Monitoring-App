@@ -8,6 +8,7 @@ import java.util.List;
 import city.org.rs.dao.UserDAO;
 import city.org.rs.models.User;
 import city.org.rs.utils.JwtUtil;
+import city.org.rs.utils.PasswordUtil;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -103,8 +104,8 @@ public class UserResource {
     public Response login(User user) {
         UserDAO dao = new UserDAO();
         try {
-            User userFromDB = dao.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
-            if(userFromDB != null) {
+            User userFromDB = dao.getUserByUsername(user.getUsername());
+            if(userFromDB != null && PasswordUtil.verifyPassword(user.getPassword(), userFromDB.getPassword())) {
                 String token = JwtUtil.createToken(userFromDB.getUsername(), userFromDB.getPassword());
                 return Response.ok(token, MediaType.APPLICATION_JSON).build();
             } else {

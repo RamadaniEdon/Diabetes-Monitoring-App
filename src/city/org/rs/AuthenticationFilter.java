@@ -14,6 +14,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import city.org.rs.dao.UserDAO;
 import city.org.rs.models.User;
 import city.org.rs.utils.JwtUtil;
+import city.org.rs.utils.PasswordUtil;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -23,6 +24,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+import java.util.Date;
 
 /**
  * This filter verify the access permissions for a user
@@ -54,8 +56,8 @@ public class AuthenticationFilter implements jakarta.ws.rs.container.ContainerRe
                 final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
                 final String encodedUserInfo = authorization.get(0).replaceFirst(AUTHENTICATION_SCHEME + " ", "");
                 DecodedJWT decodedJWT = JwtUtil.verifyToken(encodedUserInfo);
-                String username = decodedJWT.getClaim("username").asString();
-                String password = decodedJWT.getClaim("password").asString();
+                String username = JwtUtil.getDecodedUsername(decodedJWT);
+                String password = JwtUtil.getDecodedPassword(decodedJWT);
                 RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
                 Set<String> rolesSet = new HashSet<String>(Arrays.asList(rolesAnnotation.value()));
 
@@ -74,18 +76,17 @@ public class AuthenticationFilter implements jakarta.ws.rs.container.ContainerRe
     }
 
     private boolean isUserAllowed(final String username, final String password, final Set<String> rolesSet) {
-        boolean isAllowed = false;
-
         UserDAO dao = new UserDAO();
         try {
-            User user = dao.getUserByUsernameAndPassword(username, password);
-            String userRole = user.getRole();
-            if (rolesSet.contains(userRole)) {
-                isAllowed = true;
+            User user = dao.getUserByUsername(username);
+            if(!password.equals(user.getPassword())){
+                return false;
             }
-            return isAllowed;
-        } catch (SQLException e) {
+            if (rolesSet.contains(user.getRole())){
+                return true;
+            }
+        } catch (Exception e) {
         }
-        return isAllowed;
+        return false;
     }
 }

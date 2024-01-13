@@ -6,6 +6,7 @@ import java.util.List;
 
 import city.org.rs.ConnectionUtility;
 import city.org.rs.models.User;
+import city.org.rs.utils.PasswordUtil;
 
 public class UserDAO {
 
@@ -14,9 +15,10 @@ public class UserDAO {
         String sql = "INSERT INTO Users (user_id, username, password, role) VALUES (?, ?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+            String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
             statement.setInt(1, user.getUserId());
             statement.setString(2, user.getUsername());
-            statement.setString(3, user.getPassword());
+            statement.setString(3, hashedPassword);
             statement.setString(4, user.getRole());
             statement.executeUpdate();
         }  
@@ -47,8 +49,9 @@ public class UserDAO {
         String sql = "UPDATE Users SET username = ?, password = ?, role = ? WHERE user_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
+            String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
             statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
+            statement.setString(2, hashedPassword);
             statement.setString(3, user.getRole());
             statement.setInt(4, user.getUserId());
             statement.executeUpdate();
@@ -84,12 +87,11 @@ public class UserDAO {
         return users;
     }
 
-    public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE username = ? AND password = ?";
+    public User getUserByUsername(String username) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE username = ?";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
-            statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return new User(
@@ -103,4 +105,5 @@ public class UserDAO {
             }
         }
     }
+
 }
