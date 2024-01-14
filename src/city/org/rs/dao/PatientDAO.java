@@ -46,14 +46,13 @@ public class PatientDAO {
 
     // Method to update a patient's details
     public void updatePatient(Patient patient) throws SQLException {
-        String sql = "UPDATE Patients SET name = ?, age = ?, gender = ?, user_id = ? WHERE patient_id = ?";
+        String sql = "UPDATE Patients SET name = ?, age = ?, gender = ? WHERE patient_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, patient.getName());
             statement.setInt(2, patient.getAge());
             statement.setString(3, patient.getGender());
-            statement.setInt(4, patient.getUserId());
-            statement.setInt(5, patient.getPatientId());
+            statement.setInt(4, patient.getPatientId());
             statement.executeUpdate();
         }
     }

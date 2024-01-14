@@ -14,12 +14,12 @@
   <aside class="sidebar">
     <nav class="nav">
       <ul>
-        <li><a href="#">Patients</a></li>
-        <li><a href="#">Medications</a></li>
-        <li><a href="#">Users</a></li>
+        <li><a href="patients.html">Patients</a></li>
+        <li><a href="medications.html">Medications</a></li>
+        <li><a href="users.html">Users</a></li>
       </ul>
     </nav>
-    <button class="logout-btn">Logout</button>
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
   </aside>
   <main class="main-content">
     <h1>Users</h1>
@@ -35,7 +35,7 @@
         <tr>
           <td></td>
           <td><input type="text" id="username" placeholder="Username"></td>
-          <td><input type="password" id="password" placeholder="Password"></td>
+          <td><input type="password" id="password" placeholder="password"></td>
           <td>
             <select id="role">
               <option value="ADMIN">Admin</option>
@@ -49,14 +49,14 @@
       </thead>
       <tbody>
         <tr>
-          <td>1</td>
+          <!-- <td>1</td>
           <td>Prem Shahi</td>
           <td>*********</td>
           <td>Admin</td>
           <td>
             <button class="edit-btn">Edit</button>
             <button class="delete-btn">Delete</button>
-          </td>
+          </td> -->
         </tr>
         <!-- More rows can be added here -->
       </tbody>
@@ -65,16 +65,23 @@
   <script>
     $(document).ready(function () {
       var selectedUserId = null;
-
+      getMyProfile().then(user => {
+        if (user.role != 'ADMIN') {
+          window.location.href = './patients.html';
+        }
+      });
       function refreshUserTable() {
         getAllUsers().then(users => {
           var rows = users.map(u =>
             `<tr data-user-id="${u.userId}" class="user-row">
-                        <td>${u.userId}</td>
-                        <td>${u.username}</td>
+                        <td><input type="number" value="${u.userId}" readonly disabled></td>
+                        <td><input type="text" value="${u.username}" readonly disabled></td>
+                        <td></td>
                         <td>${u.role}</td>
                         <td>
                             <button class="edit-btn">Edit</button>
+                            <button class="cancel-btn delete-btn" style="display: none;">Cancel</button>
+                            <button class="save-btn edit-btn" style="display: none;">Save</button>
                             <button class="delete-btn">Delete</button>
                         </td>
                     </tr>`
@@ -88,29 +95,48 @@
       $('#addUser').click(function () {
         var username = $('#username').val();
         var password = $('#password').val();
+        console.log(password)
         var role = $('#role').val();
-        if (username && password && role) {
+        if (username && role) {
           var data = {
             username: username,
             password: password,
             role: role
           };
         }
+
+        if (selectedUserId) {
+
+          $('#addUser').text('Update User').attr('id', 'updateUser');
+        
+        // If selectedUserId is set, call updateUser instead of addUser
+        console.log(data);
+        updateUser(selectedUserId, data).then(() => {
+          refreshUserTable();
+          setFormState(false); // Reset form state after update
+        });
+      } else {        
         addUser(data).then(() => {
           refreshUserTable();
           $('#username').val('');
           $('#password').val('');
           $('#role').val('ADMIN');
         });
+      }
       })
-
+    
       $('#usersTable').on('click', '.edit-btn', function () {
         var userId = $(this).closest('.user-row').data('user-id');
         selectedUserId = userId;
-        var userRow = $(this).closest('.user-row');
-        var username = userRow.find('td').eq(1).text();
-        var role = userRow.find('td').eq(2).text();
+        console.log(userId);
+        var row = $(this).closest('.user-row');
+        var role = $(row).find('td').eq(3).text();
+        var userId = $(row).find('input[type="number"]').val();
+        var username = $(row).find('input[type="text"]').val();
+        console.log(username, role)
 
+
+       
         setFormState(true, username, role);
       });
 
@@ -131,17 +157,6 @@
         });
       });
 
-      $('#username').keyup(function () {
-        selectedUserId = null;
-      });
-
-      $('#password').keyup(function () {
-        selectedUserId = null;
-      });
-
-      $('#role').change(function () {
-        selectedUserId = null;
-      });
     })
   </script>
 </body>

@@ -78,16 +78,15 @@ public class DailyRecordDAO {
 
     // Method to update a daily record's details
     public void updateDailyRecord(DailyRecord record) throws SQLException {
-        String sql = "UPDATE DailyRecords SET patient_id = ?, date = ?, blood_glucose_level = ?, carb_intake = ?, medication_id = ?, medication_dose = ? WHERE record_id = ?";
+        String sql = "UPDATE DailyRecords SET date = ?, blood_glucose_level = ?, carb_intake = ?, medication_id = ?, medication_dose = ? WHERE record_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, record.getPatientId());
-            statement.setString(2, record.getDate());
-            statement.setDouble(3, record.getBloodGlucoseLevel());
-            statement.setDouble(4, record.getCarbIntake());
-            statement.setInt(5, record.getMedicationId());
-            statement.setDouble(6, record.getMedicationDose());
-            statement.setInt(7, record.getRecordId());
+            statement.setString(1, record.getDate());
+            statement.setDouble(2, record.getBloodGlucoseLevel());
+            statement.setDouble(3, record.getCarbIntake());
+            statement.setInt(4, record.getMedicationId());
+            statement.setDouble(5, record.getMedicationDose());
+            statement.setInt(6, record.getRecordId());
             statement.executeUpdate();
         }
     }

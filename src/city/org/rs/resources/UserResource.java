@@ -124,12 +124,24 @@ public class UserResource {
     }
 
     @GET
-    @Path("/TEST")
+    @Path("/myprofile")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"ADMIN"})
-    public String test(@HeaderParam("Authorization") String authorizationHeader){
+    @RolesAllowed({"ADMIN", "PHYSICIAN"})
+    public Response test(@HeaderParam("Authorization") String authorizationHeader){
         String username = Helpers.getAuthenticationUsername(authorizationHeader);
-        return username;
+        UserDAO dao = new UserDAO();
+        try {
+            User user = dao.getUserByUsername(username);
+            if (user != null) {
+                user.setPassword(null);
+                return Response.ok(user, MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving user").build();
+        }
     }
+
 
 }

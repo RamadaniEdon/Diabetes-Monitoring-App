@@ -44,14 +44,28 @@ public class UserDAO {
 
     // Method to update a user's details
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE Users SET username = ?, password = ?, role = ? WHERE user_id = ?";
+        String sql;
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            // Update without changing the password
+            sql = "UPDATE Users SET username = ?, role = ? WHERE user_id = ?";
+        } else {
+            // Update including the password
+            sql = "UPDATE Users SET username = ?, role = ?, password = ? WHERE user_id = ?";
+        }
+    
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
             statement.setString(1, user.getUsername());
-            statement.setString(2, hashedPassword);
-            statement.setString(3, user.getRole());
-            statement.setInt(4, user.getUserId());
+            statement.setString(2, user.getRole());
+    
+            if (!(user.getPassword() == null || user.getPassword().isEmpty())) {
+                String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+                statement.setString(3, hashedPassword);
+                statement.setInt(4, user.getUserId());
+            } else {
+                statement.setInt(3, user.getUserId());
+            }
+    
             statement.executeUpdate();
         }
     }
