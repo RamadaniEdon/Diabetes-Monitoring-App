@@ -466,7 +466,7 @@ function loginUser(username, password) {
             console.log(localStorage.getItem('token'))
             setCookie('token', response.token, 1);
             localStorage.setItem('token', response.token); // Replace with your actual token key
-            window.location.href = './medications.html'; // Replace with your actual redirect page
+            window.location.href = './patients.html'; // Replace with your actual redirect page
         },
         error: function(xhr) {
             alert('Error: ' + xhr.status + ' ' + xhr.responseText);
