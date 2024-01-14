@@ -510,7 +510,7 @@ function updateDailyRecord(recordId, recordData) { return ajaxRequest(endpoints.
 function deleteDailyRecord(recordId) { return ajaxRequest(endpoints.dailyRecordById(recordId), 'DELETE'); }
 function getDailyRecord(recordId) { return ajaxRequest(endpoints.dailyRecordById(recordId), 'GET'); }
 
-function getPatientRecords(patientId = 8, startDate = "", endDate = "") { 
+function getPatientRecords(patientId = 8, startDate = "2011-10-10", endDate = "2011-10-10") { 
     return ajaxRequest(endpoints.patientRecords(patientId), 'GET',null,{"startDate": startDate, "endDate": endDate});
 }
 

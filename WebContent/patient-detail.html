@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
   <script src="./function-management.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -58,8 +59,7 @@
       </table>
     </div>
     <div class="graph-container">
-      <!-- Placeholder for the graph -->
-      <div id="graph">Graph will be rendered here.</div>
+      <canvas id="myChart"></canvas>
     </div>
     <div class="date-filter">
       <label for="from-date">From:</label>
@@ -103,8 +103,8 @@
     var urlParams = new URLSearchParams(window.location.search);
     var dataValue = urlParams.get('data');
     $(document).ready(function () {
-      function refreshRecordTable() {
-        getPatientRecords().then(records => {
+      function refreshRecordTable(startDate = "", endDate = "") {
+        getPatientRecords(8, startDate, endDate).then(records => {
           console.log(records);
           var rows = records.map(s =>
 
@@ -121,10 +121,74 @@
              </tr>`
           ).join('');
           $('#records-table tbody').html(rows);
+
+          var labels = records.map(record => record.date);
+          var bloodGlucoseLevels = records.map(record => record.bloodGlucoseLevel);
+          var carbIntakes = records.map(record => record.carbIntake);
+
+          renderChart(labels, bloodGlucoseLevels, carbIntakes);
         });
       };
 
       refreshRecordTable();
+      // getPatientRecords().then(records => {
+      //   var labels = records.map(record => record.date);
+      //   var bloodGlucoseLevels = records.map(record => record.bloodGlucoseLevel);
+      //   var carbIntakes = records.map(record => record.carbIntake);
+
+      //   renderChart(labels, bloodGlucoseLevels, carbIntakes);
+      // });
+
+
+      function renderChart(labels, dataSet1, dataSet2) {
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = Chart.getChart(ctx);
+        if(chart)
+          chart.destroy();
+        var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels, // Array of labels (x-axis)
+            datasets: [
+              {
+                label: 'Blood Glucose Level',
+                data: dataSet1, // Array of data values for the first line
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              },
+              {
+                label: 'Carb Intake',
+                data: dataSet2, // Array of data values for the second line
+                fill: false,
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+
+      $(document).ready(function () {
+        $('#filter-btn').click(function () {
+          var startDate = $('#from-date').val();
+          var endDate = $('#to-date').val();
+          var patientId = 8;
+          console.log(startDate);
+          console.log(patientId);
+          refreshRecordTable(startDate, endDate);
+          // getPatientRecords(patientId, startDate,endDate).then(records => {
+          //   refreshRecordTable();
+          // });
+        });
+      });
     });
 
   </script>
