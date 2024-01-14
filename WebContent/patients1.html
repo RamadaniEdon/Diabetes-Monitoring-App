@@ -34,6 +34,7 @@
           <th>Name</th>
           <th>Age</th>
           <th>Gender</th>
+          <th>Physician</th>
           <th>Actions</th>
         </tr>
         <tr> <!-- New row for adding patients -->
@@ -43,11 +44,12 @@
           <td>
             <select id="gender">
               <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
             </select>
           </td>
+          <td><input type="number" id="userId" placeholder="Physician ID"></td>
           <td>
             <button id="addPatient" class="add-btn">Add Patient</button>
           </td>
@@ -77,9 +79,11 @@
                  <td>${p.name}</td>
                  <td>${p.age}</td>
                  <td>${p.gender}</td>
+                 <td>${p.userId}</td>
                  <td>
                       <button class="edit-btn">Edit</button>
                       <button class="delete-btn">Delete</button>
+                      <button class="view-btn">View</button>
                     </td>
              </tr>`
          ).join('');
@@ -99,14 +103,17 @@
      var patientName = $(this).children('td').eq(1).text();
      var patientAge = $(this).children('td').eq(2).text();
      var patientGender = $(this).children('td').eq(3).text();
+     var patiendPhysicianId = $(this).children('td').eq(4).text();
 
+     $('#addPatient').text('Update Patient').attr('id', 'updatePatient');
      
      $('#name').val(patientName);
      $('#age').val(patientAge);
      $('#gender').val(patientGender);
+     $('#userId').val(patiendPhysicianId);
  });
 
- $('#addPatientForm').submit(function(e) {
+ $('#addPatient').on("click",this,function(e) {
      e.preventDefault();
      var patientData = {
          name: $('#name').val(),
@@ -120,6 +127,7 @@
          updatePatient(selectedPatientId, patientData).then(() => {
              refreshPatientTable();
              clearForm();
+             $('#updatePatient').text('Add Patient').attr('id', 'addPatient');
          });
      } else {
          addPatient(patientData).then(() => {
@@ -136,9 +144,6 @@
     if (patientId) {
       deletePatient(patientId).then(() => {
         refreshPatientTable();
-      }).catch(error => {
-        console.error('Deletion failed:', error);
-        alert('Deletion failed. Check console for details.');
       });
     } else {
       alert('No patient ID found for deletion.');
@@ -168,25 +173,25 @@
 });
 
   // Handling the click event for updating a patient
-  $(document).on('click', '#updatePatient', function() {
-    var patientData = {
-      name: $('#name').val(),
-      age: parseInt($('#age').val(), 10),
-      gender: $('#gender').val(),
+  // $(document).on('click', '#updatePatient', function() {
+  //   var patientData = {
+  //     name: $('#name').val(),
+  //     age: parseInt($('#age').val(), 10),
+  //     gender: $('#gender').val(),
 
-    };
+  //   };
 
-    updatePatient(selectedPatientId, patientData).then(() => {
-      refreshPatientTable();
-      clearForm();
+  //   updatePatient(selectedPatientId, patientData).then(() => {
+  //     refreshPatientTable();
+  //     clearForm();
 
-      // Change 'Update Patient' button back to 'Add Patient'
-      $('#updatePatient').text('Add Patient').attr('id', 'addPatient');
-    }).catch(error => {
-      console.error('Update failed:', error);
-      alert('Update failed. Check console for details.');
-    });
-  });
+  //     // Change 'Update Patient' button back to 'Add Patient'
+  //     $('#updatePatient').text('Add Patient').attr('id', 'addPatient');
+  //   }).catch(error => {
+  //     console.error('Update failed:', error);
+  //     alert('Update failed. Check console for details.');
+  //   });
+  // });
 
  function clearForm() {
      $('#name').val('');

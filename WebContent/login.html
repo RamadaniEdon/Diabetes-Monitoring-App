@@ -32,15 +32,7 @@
       var username = document.getElementById('username').value;
       var password = document.getElementById('password').value;
 
-      loginUser({ username: username, password: password })
-        .done(function(response) {
-          // Handle successful login, e.g., redirecting to a different page or showing a success message
-          console.log('Login successful:', response);
-        })
-        .fail(function(error) {
-          // Handle login errors, e.g., showing an error message
-          console.error('Login failed:', error);
-        });
+      loginUser(username, password);
     });
   </script>
 </body>

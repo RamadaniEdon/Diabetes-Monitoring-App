@@ -209,12 +209,12 @@ public class DailyRecordDAO {
         List<Object> parameters = new ArrayList<>();
         parameters.add(patientId);
     
-        if (startDate != null) {
+        if (startDate != null && !startDate.isEmpty()) {
             sql.append(" AND date >= ?");
             parameters.add(startDate);
         }
     
-        if (endDate != null) {
+        if (endDate != null && !endDate.isEmpty()) {
             sql.append(" AND date <= ?");
             parameters.add(endDate);
         }

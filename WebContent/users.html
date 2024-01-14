@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Management</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./function-management.js"></script>
 </head>
+
 <body>
   <aside class="sidebar">
     <nav class="nav">
-        <ul>
-          <li><a href="#">Patients</a></li>
-          <li><a href="#">Medications</a></li>
-          <li><a href="#">Users</a></li>
-        </ul>
+      <ul>
+        <li><a href="#">Patients</a></li>
+        <li><a href="#">Medications</a></li>
+        <li><a href="#">Users</a></li>
+      </ul>
     </nav>
     <button class="logout-btn">Logout</button>
   </aside>
   <main class="main-content">
     <h1>Users</h1>
-    <table class="users-table">
+    <table id="usersTable" class="users-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -27,6 +31,20 @@
           <th>Password</th>
           <th>Role</th>
           <th>Actions</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="text" id="username" placeholder="Username"></td>
+          <td><input type="password" id="password" placeholder="Password"></td>
+          <td>
+            <select id="role">
+              <option value="ADMIN">Admin</option>
+              <option value="PHYSICIAN">Physician</option>
+            </select>
+          </td>
+          <td>
+            <button id="addUser" class="add-btn">Add User</button>
+          </td>
         </tr>
       </thead>
       <tbody>
@@ -43,7 +61,89 @@
         <!-- More rows can be added here -->
       </tbody>
     </table>
-    <button class="add-btn">Add User</button>
   </main>
+  <script>
+    $(document).ready(function () {
+      var selectedUserId = null;
+
+      function refreshUserTable() {
+        getAllUsers().then(users => {
+          var rows = users.map(u =>
+            `<tr data-user-id="${u.userId}" class="user-row">
+                        <td>${u.userId}</td>
+                        <td>${u.username}</td>
+                        <td>${u.role}</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>`
+          ).join('');
+          $('#usersTable tbody').html(rows);
+        });
+      }
+
+      refreshUserTable();
+
+      $('#addUser').click(function () {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var role = $('#role').val();
+        if (username && password && role) {
+          var data = {
+            username: username,
+            password: password,
+            role: role
+          };
+        }
+        addUser(data).then(() => {
+          refreshUserTable();
+          $('#username').val('');
+          $('#password').val('');
+          $('#role').val('ADMIN');
+        });
+      })
+
+      $('#usersTable').on('click', '.edit-btn', function () {
+        var userId = $(this).closest('.user-row').data('user-id');
+        selectedUserId = userId;
+        var userRow = $(this).closest('.user-row');
+        var username = userRow.find('td').eq(1).text();
+        var role = userRow.find('td').eq(2).text();
+
+        setFormState(true, username, role);
+      });
+
+      function setFormState(isEditMode, username = '', role = '') {
+        $('#username').val(username);
+        $('#role').val(role);
+        if (isEditMode) {
+          $('#addUser').text('Update User');
+        } else {
+          $('#addUser').text('Add User');
+        }
+      }
+
+      $('#usersTable').on('click', '.delete-btn', function () {
+        var userId = $(this).closest('.user-row').data('userId');
+        deleteUser(userId).then(() => {
+          refreshUserTable();
+        });
+      });
+
+      $('#username').keyup(function () {
+        selectedUserId = null;
+      });
+
+      $('#password').keyup(function () {
+        selectedUserId = null;
+      });
+
+      $('#role').change(function () {
+        selectedUserId = null;
+      });
+    })
+  </script>
 </body>
+
 </html>

@@ -1,52 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patient Detail</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./function-management.js"></script>
 </head>
+
 <body>
   <aside class="sidebar">
     <nav class="nav">
-        <ul>
-          <li><a href="#">Patients</a></li>
-          <li><a href="#">Medications</a></li>
-          <li><a href="#">Users</a></li>
-        </ul>
+      <ul>
+        <li><a href="#">Patients</a></li>
+        <li><a href="#">Medications</a></li>
+        <li><a href="#">Users</a></li>
+      </ul>
     </nav>
     <button class="logout-btn">Logout</button>
   </aside>
   <main class="main-content">
     <h1>Patient Detail</h1>
     <div class="patient-info">
-      <table class="info-table">
+      <table id="info-table" class="info-table">
         <tr>
           <th>ID</th>
-          <td>1</td>
+          <td></td>
         </tr>
         <tr>
           <th>Name</th>
-          <td>Prem Shahi</td>
-        </tr>
-        <tr>
-          <th>Email</th>
-          <td>premshahi@gmail.com</td>
+          <td><input type="text" id="name" value="Prem Shahi" readonly></td>
         </tr>
         <tr>
           <th>Age</th>
-          <td>18</td>
+          <td><input type="number" id="age" value="10" readonly></td>
         </tr>
         <tr>
           <th>Gender</th>
-          <td>Male</td>
+          <td>
+            <select id="gender" disabled>
+              <option value="">Select Gender</option>
+              <option value="male" selected>Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </td>
         </tr>
         <tr>
-            <th>Actions</th>
-            <td>
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-              </td>
+          <th>Actions</th>
+          <td>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+          </td>
         </tr>
       </table>
     </div>
@@ -55,42 +62,72 @@
       <div id="graph">Graph will be rendered here.</div>
     </div>
     <div class="date-filter">
-        <label for="from-date">From:</label>
-        <input type="date" id="from-date" name="from-date">
-        
-        <label for="to-date">To:</label>
-        <input type="date" id="to-date" name="to-date">
-      
-        <button type="button" id="filter-btn">Filter</button>
-      </div>
-      <div class="data-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Glucose Level</th>
-              <th>Carb Intake</th>
-              <th>Medication</th>
-              <th>Dosage</th>
-              <th>Actions</th> <!-- Added Actions Column -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>2024-01-05</td>
-              <td>125.00</td>
-              <td>40.00</td>
-              <td>Insulin</td>
-              <td>30 ml</td>
-              <td>
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-              </td>
-            </tr>
-            <!-- More rows can be added here -->
-          </tbody>
-        </table>
-      </div>
+      <label for="from-date">From:</label>
+      <input type="date" id="from-date" name="from-date">
+
+      <label for="to-date">To:</label>
+      <input type="date" id="to-date" name="to-date">
+
+      <button type="button" id="filter-btn">Filter</button>
+    </div>
+    <div class="data-table">
+      <table id="records-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Glucose Level</th>
+            <th>Carb Intake</th>
+            <th>Medication</th>
+            <th>Dosage</th>
+            <th>Actions</th> <!-- Added Actions Column -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2024-01-05</td>
+            <td>125.00</td>
+            <td>40.00</td>
+            <td>Insulin</td>
+            <td>30 ml</td>
+            <td>
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+          <!-- More rows can be added here -->
+        </tbody>
+      </table>
+    </div>
   </main>
+  <script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var dataValue = urlParams.get('data');
+    $(document).ready(function () {
+      function refreshRecordTable() {
+        getPatientRecords().then(records => {
+          console.log(records);
+          var rows = records.map(s =>
+
+            `<tr data-record-id="${s.recordId}" class="satient-row">
+                 <td>${s.date}</td>
+                 <td>${s.bloodGlucoseLevel}</td>
+                 <td>${s.carbIntake}</td>
+                 <td>${s.medicationId}</td>
+                 <td>${s.medicationDose}</td>
+                 <td>
+                      <button class="edit-btn">Edit</button>
+                      <button class="delete-btn">Delete</button>
+                    </td>
+             </tr>`
+          ).join('');
+          $('#records-table tbody').html(rows);
+        });
+      };
+
+      refreshRecordTable();
+    });
+
+  </script>
 </body>
+
 </html>

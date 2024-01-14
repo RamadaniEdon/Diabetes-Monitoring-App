@@ -5,12 +5,15 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.List;
 
+import city.org.rs.AuthenticationFilter;
 import city.org.rs.dao.UserDAO;
 import city.org.rs.models.User;
 import city.org.rs.utils.Helpers;
 import city.org.rs.utils.JwtUtil;
 import city.org.rs.utils.PasswordUtil;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -109,7 +112,8 @@ public class UserResource {
             User userFromDB = dao.getUserByUsername(user.getUsername());
             if(userFromDB != null && PasswordUtil.verifyPassword(user.getPassword(), userFromDB.getPassword())) {
                 String token = JwtUtil.createToken(userFromDB.getUsername(), userFromDB.getPassword());
-                return Response.ok(token, MediaType.APPLICATION_JSON).build();
+                JsonObject json = Json.createObjectBuilder().add("token", AuthenticationFilter.AUTHENTICATION_SCHEME + " " + token).build();
+                return Response.ok(json, MediaType.APPLICATION_JSON).build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
