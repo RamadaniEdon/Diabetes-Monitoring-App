@@ -472,6 +472,7 @@ function loginUser(username, password) {
             alert('Error: ' + xhr.status + ' ' + xhr.responseText);
         }
     });
+
 }
 // .then(function(response) {
 //     localStorage.setItem('token', response.token);
@@ -536,6 +537,20 @@ function getCookie(name) {
     }
     return null;
 }
+
+// Function to delete a cookie
+function deleteCookie(name) {
+    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+function logoutUser() {
+    deleteCookie('token'); // Delete the 'token' cookie
+    localStorage.removeItem('token'); // Remove token from localStorage if it's there
+    window.location.href = './login.html'; // Redirect to the login page
+}
+
+// Example: Delete a cookie named "exampleCookie"
+// deleteCookie("exampleCookie");
 
 // // Example: Retrieve the value of the "exampleCookie" cookie
 // var cookieValue = getCookie("exampleCookie");
