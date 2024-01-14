@@ -7,6 +7,7 @@ import java.util.List;
 
 import city.org.rs.dao.MedicationDAO;
 import city.org.rs.models.Medication;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -24,6 +25,7 @@ public class MedicationResource {
     // API to list all medications
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN", "PHYSICIAN"})
     public Response listMedications() {
         MedicationDAO dao = new MedicationDAO();
         try {
@@ -38,6 +40,7 @@ public class MedicationResource {
     // API to insert new medication
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
     public Response addMedication(Medication medication) {
         MedicationDAO dao = new MedicationDAO();
         try {
@@ -53,6 +56,7 @@ public class MedicationResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @RolesAllowed({"ADMIN"})
     public Response updateMedication(@PathParam("id") int id, Medication medication) {
         MedicationDAO dao = new MedicationDAO();
         try {
@@ -67,6 +71,7 @@ public class MedicationResource {
     // API to delete medication
     @DELETE
     @Path("{id}")
+    @RolesAllowed({"ADMIN"})
     public Response deleteMedication(@PathParam("id") int id) {
         MedicationDAO dao = new MedicationDAO();
         try {
@@ -80,6 +85,7 @@ public class MedicationResource {
     // API to get a single medication
     @GET
     @Path("{id}")
+    @RolesAllowed({"ADMIN", "PHYSICIAN"})
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMedication(@PathParam("id") int id) {
         MedicationDAO dao = new MedicationDAO();

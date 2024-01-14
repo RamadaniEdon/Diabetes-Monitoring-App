@@ -32,6 +32,7 @@ public class UserResource {
     // API to list all users
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
     public Response listUsers() {
         UserDAO dao = new UserDAO();
         try {
@@ -45,6 +46,7 @@ public class UserResource {
     // API to insert new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
     public Response addUser(User user) {
         UserDAO dao = new UserDAO();
         try {
@@ -60,6 +62,7 @@ public class UserResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @RolesAllowed({"ADMIN"})
     public Response updateUser(@PathParam("id") int id, User user) {
         UserDAO dao = new UserDAO();
         try {
@@ -74,6 +77,7 @@ public class UserResource {
     // API to delete user
     @DELETE
     @Path("{id}")
+    @RolesAllowed({"ADMIN"})
     public Response deleteUser(@PathParam("id") int id) {
         UserDAO dao = new UserDAO();
         try {
@@ -88,6 +92,7 @@ public class UserResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
     public Response getUser(@PathParam("id") int id) {
         UserDAO dao = new UserDAO();
         try {

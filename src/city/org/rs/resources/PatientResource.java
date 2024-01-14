@@ -52,6 +52,7 @@ public class PatientResource {
     // API to insert new patient
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
     public Response addPatient(Patient patient) {
         PatientDAO dao = new PatientDAO();
         try {
@@ -67,6 +68,7 @@ public class PatientResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
+    @RolesAllowed({"ADMIN"})
     public Response updatePatient(@PathParam("id") int id, Patient patient) {
         PatientDAO dao = new PatientDAO();
         try {
@@ -81,6 +83,7 @@ public class PatientResource {
     // API to delete patient
     @DELETE
     @Path("{id}")
+    @RolesAllowed({"ADMIN"})
     public Response deletePatient(@PathParam("id") int id) {
         PatientDAO dao = new PatientDAO();
         try {
@@ -95,6 +98,7 @@ public class PatientResource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN", "PHYSICIAN"})
     public Response getPatient(@PathParam("id") int id, @HeaderParam("Authorization") String authorizationHeader) {
         String username = Helpers.getAuthenticationUsername(authorizationHeader);
         UserDAO userDao = new UserDAO();
