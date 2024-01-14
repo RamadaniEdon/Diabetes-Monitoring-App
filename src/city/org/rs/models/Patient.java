@@ -8,7 +8,7 @@ public class Patient {
     private int user_id; // Foreign key to Users table
 
     // Constructor
-    public Patient(int patient_id, String name, int age, String gender, int userId) {
+    public Patient(int patient_id, String name, int age, String gender, int user_id) {
         this.patient_id = patient_id;
         this.name = name;
         this.age = age;
@@ -20,17 +20,17 @@ public class Patient {
         this.name = name;
         this.age = age;
         this.gender = gender;
-        this.user_id = user_id;
+        this.user_id = userId;
     }
-    
-    //Constructor 2
-  	public Patient(int patient_id) {
-        this.patient_id = patient_id;
-  	}
 
-  	//Constructor 3
-  	public Patient() {
-  	}
+    // Constructor 2
+    public Patient(int patient_id) {
+        this.patient_id = patient_id;
+    }
+
+    // Constructor 3
+    public Patient() {
+    }
 
     // Getters and Setters
     public int getPatientId() {
@@ -69,19 +69,18 @@ public class Patient {
         return user_id;
     }
 
-    public void setUserId(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.user_id = userId;
     }
 
     @Override
     public String toString() {
         return "Patient{" +
-               "patient_id=" + patient_id +
-               ", name='" + name + '\'' +
-               ", age=" + age +
-               ", gender='" + gender + '\'' +
-               ", user_id=" + user_id +
-               '}';
+                "patient_id=" + patient_id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", user_id=" + user_id +
+                '}';
     }
 }
-
