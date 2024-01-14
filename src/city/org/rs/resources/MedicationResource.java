@@ -30,7 +30,8 @@ public class MedicationResource {
             List<Medication> medications = dao.getAllMedications();
             return Response.ok(medications, MediaType.APPLICATION_JSON).build();
         } catch (SQLException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving medications").build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving medications")
+                    .build();
         }
     }
 

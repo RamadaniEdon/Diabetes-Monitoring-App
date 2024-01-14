@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Detail</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <nav class="nav">
+        <ul>
+          <li><a href="#">Patients</a></li>
+          <li><a href="#">Medications</a></li>
+          <li><a href="#">Users</a></li>
+        </ul>
+    </nav>
+    <button class="logout-btn">Logout</button>
+  </aside>
+  <main class="main-content">
+    <h1>Patient Detail</h1>
+    <div class="patient-info">
+      <table class="info-table">
+        <tr>
+          <th>ID</th>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>Prem Shahi</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>premshahi@gmail.com</td>
+        </tr>
+        <tr>
+          <th>Age</th>
+          <td>18</td>
+        </tr>
+        <tr>
+          <th>Gender</th>
+          <td>Male</td>
+        </tr>
+      </table>
+    </div>
+    <div class="graph-container">
+      <!-- Placeholder for the graph -->
+      <div id="graph">Graph will be rendered here.</div>
+    </div>
+    <div class="date-filter">
+        <label for="from-date">From:</label>
+        <input type="date" id="from-date" name="from-date">
+        
+        <label for="to-date">To:</label>
+        <input type="date" id="to-date" name="to-date">
+      
+        <button type="button" id="filter-btn">Filter</button>
+      </div>
+      <div class="data-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Glucose Level</th>
+              <th>Carb Intake</th>
+              <th>Medication</th>
+              <th>Dosage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2024-01-05</td>
+              <td>125.00</td>
+              <td>40.00</td>
+              <td>Insulin</td>
+              <td>30 ml</td>
+            </tr>
+            <!-- More rows can be added here -->
+          </tbody>
+        </table>
+      </div>
+  </main>
+</body>
+</html>

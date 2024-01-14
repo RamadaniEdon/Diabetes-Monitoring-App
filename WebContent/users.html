@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <nav class="nav">
+        <ul>
+          <li><a href="#">Patients</a></li>
+          <li><a href="#">Medications</a></li>
+          <li><a href="#">Users</a></li>
+        </ul>
+    </nav>
+    <button class="logout-btn">Logout</button>
+  </aside>
+  <main class="main-content">
+    <h1>Users</h1>
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Prem Shahi</td>
+          <td>*********</td>
+          <td>Admin</td>
+          <td>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+          </td>
+        </tr>
+        <!-- More rows can be added here -->
+      </tbody>
+    </table>
+    <button class="add-btn">Add User</button>
+  </main>
+</body>
+</html>
