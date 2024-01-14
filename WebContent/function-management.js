@@ -18,11 +18,8 @@ const endpoints = {
     patientRecordAverages: (id) => `/patients/${id}/dailyrecords/average` 
 };
 
-// Generic AJAX request function
 function ajaxRequest(url, method, data = null, headersParams = null) {
     if(!getCookie('token')) {
-        // console.log(localStorage.getItem('token'))
-        // console.log(getCookie('token'))
         alert("Login First");
         window.location.href = './login.html';
         return;
@@ -36,8 +33,6 @@ function ajaxRequest(url, method, data = null, headersParams = null) {
     else{
         headersParams["Authorization"] = token;
     }
-    console.log("EDONIIII")
-    console.log(headersParams)
     return $.ajax({
         url: apiBaseUrl + url,
         type: method,
@@ -46,11 +41,8 @@ function ajaxRequest(url, method, data = null, headersParams = null) {
         data: data ? JSON.stringify(data) : null,
         headers: {...headersParams},
         success: function(response) {
-            // Handle success
-            console.log(response)
         },
         error: function(xhr) {
-            alert('Error: ' + xhr.status + ' ' + xhr.responseText);
         }
     });
 }
@@ -60,7 +52,6 @@ function loginUser(username, password) {
         "username": username,
         "password": password
     };
-    console.log(data)
     return $.ajax({
         url: apiBaseUrl + endpoints.loginUser,
         type: "POST",
@@ -68,12 +59,9 @@ function loginUser(username, password) {
         dataType: 'json',
         data: JSON.stringify(data),
         success: function(response) {
-            // Handle success (e.g., store the token and redirect)
-            console.log(response)
-            console.log(localStorage.getItem('token'))
             setCookie('token', response.token, 1);
-            localStorage.setItem('token', response.token); // Replace with your actual token key
-            window.location.href = './patients.html'; // Replace with your actual redirect page
+            localStorage.setItem('token', response.token); 
+            window.location.href = './patients.html'; 
         },
         error: function(xhr) {
             alert('Error: ' + xhr.status + ' ' + xhr.responseText);
@@ -81,10 +69,6 @@ function loginUser(username, password) {
     });
 
 }
-// .then(function(response) {
-//     localStorage.setItem('token', response.token);
-// })
-// Usage of ajaxRequest for different operations
 function getAllUsers() { return ajaxRequest(endpoints.users, 'GET'); }
 function addUser(userData) { return ajaxRequest(endpoints.users, 'POST', userData); }
 function updateUser(userId, userData) { return ajaxRequest(endpoints.userById(userId), 'PUT', userData); }
@@ -93,12 +77,9 @@ function getUser(userId) { return ajaxRequest(endpoints.userById(userId), 'GET')
 
 function getAllPatients() { return ajaxRequest(endpoints.patients, 'GET'); }
 function addPatient(patientData) { 
-    // console.log(patientData)
     return ajaxRequest(endpoints.patients, 'POST', patientData);
 }
 function updatePatient(patientId, patientData) {
-    console.log("GENTIIIII")
-    console.log(patientData)
     return ajaxRequest(endpoints.patientById(patientId), 'PUT', patientData);
 }
 function deletePatient(patientId) { return ajaxRequest(endpoints.patientById(patientId), 'DELETE'); }
@@ -115,7 +96,6 @@ function getMedication(medicationId) { return ajaxRequest(endpoints.medicationBy
 function getAllDailyRecords() { return ajaxRequest(endpoints.dailyRecords, 'GET'); }
 function addDailyRecord(recordData) { return ajaxRequest(endpoints.dailyRecords, 'POST', recordData); }
 function updateDailyRecord(recordId, recordData) { 
-    console.log(recordData)
     return ajaxRequest(endpoints.dailyRecordById(recordId), 'PUT', recordData); }
 function deleteDailyRecord(recordId) { return ajaxRequest(endpoints.dailyRecordById(recordId), 'DELETE'); }
 function getDailyRecord(recordId) { return ajaxRequest(endpoints.dailyRecordById(recordId), 'GET'); }
@@ -162,14 +142,7 @@ function deleteCookie(name) {
 }
 
 function logoutUser() {
-    deleteCookie('token'); // Delete the 'token' cookie
-    localStorage.removeItem('token'); // Remove token from localStorage if it's there
-    window.location.href = './login.html'; // Redirect to the login page
+    deleteCookie('token'); 
+    localStorage.removeItem('token'); 
+    window.location.href = './login.html'; 
 }
-
-// Example: Delete a cookie named "exampleCookie"
-// deleteCookie("exampleCookie");
-
-// // Example: Retrieve the value of the "exampleCookie" cookie
-// var cookieValue = getCookie("exampleCookie");
-// console.log(cookieValue);

@@ -22,7 +22,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/medications")
 public class MedicationResource {
 
-    // API to list all medications
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN", "PHYSICIAN"})
@@ -37,7 +36,6 @@ public class MedicationResource {
         }
     }
 
-    // API to insert new medication
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN"})
@@ -52,7 +50,6 @@ public class MedicationResource {
         }
     }
 
-    // API to update existing medication
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
@@ -68,7 +65,6 @@ public class MedicationResource {
         }
     }
 
-    // API to delete medication
     @DELETE
     @Path("{id}")
     @RolesAllowed({"ADMIN"})
@@ -82,7 +78,6 @@ public class MedicationResource {
         }
     }
 
-    // API to get a single medication
     @GET
     @Path("{id}")
     @RolesAllowed({"ADMIN", "PHYSICIAN"})

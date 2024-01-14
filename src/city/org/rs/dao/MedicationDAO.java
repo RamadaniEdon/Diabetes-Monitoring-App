@@ -9,7 +9,6 @@ import city.org.rs.models.Medication;
 
 public class MedicationDAO {
 
-    // Method to add a new medication
     public void addMedication(Medication medication) throws SQLException {
         String sql = "INSERT INTO Medications (medication_name, unit) VALUES (?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -20,7 +19,6 @@ public class MedicationDAO {
         }
     }
 
-    // Method to retrieve a medication by ID
     public Medication getMedication(int medicationId) throws SQLException {
         String sql = "SELECT * FROM Medications WHERE medication_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -39,7 +37,6 @@ public class MedicationDAO {
         }
     }
 
-    // Method to update a medication's details
     public void updateMedication(Medication medication) throws SQLException {
         String sql = "UPDATE Medications SET medication_name = ?, unit = ? WHERE medication_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -51,7 +48,6 @@ public class MedicationDAO {
         }
     }
 
-    // Method to delete a medication
     public void deleteMedication(int medicationId) throws SQLException {
         String sql = "DELETE FROM Medications WHERE medication_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -61,7 +57,6 @@ public class MedicationDAO {
         }
     }
 
-    // Method to list all medications
     public List<Medication> getAllMedications() throws SQLException {
         List<Medication> medications = new ArrayList<>();
         String sql = "SELECT * FROM Medications";

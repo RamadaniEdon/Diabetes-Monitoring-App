@@ -12,9 +12,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "o5lo4IaL/LHPXpVYzhY8R7TxECjO78YdZkEMwoamG4Y="; // Replace with a secure secret key
-    private static final long expirationMillis = 3600000; // 1 hour
-    // Create JWT
+    private static final String SECRET_KEY = "o5lo4IaL/LHPXpVYzhY8R7TxECjO78YdZkEMwoamG4Y=";
+    private static final long expirationMillis = 3600000; 
     public static String createToken(String username, String password) {
       Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
@@ -28,7 +27,6 @@ public class JwtUtil {
               .sign(algorithm);
     }
 
-    // Verify and decode JWT
     public static DecodedJWT verifyToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         JWTVerifier verifier = JWT.require(algorithm).build();
@@ -46,23 +44,5 @@ public class JwtUtil {
 
     public static String getAuthenticationToken(String authenticationHeader){
         return authenticationHeader.replaceFirst(AuthenticationFilter.AUTHENTICATION_SCHEME + " ", "");
-    }
-
-    // Example usage
-    public static void main(String[] args) {
-        String username = "john_doe";
-        String password = "secure_password";
-
-        // Create JWT
-        String token = createToken(username, password);
-        System.out.println("Token: " + token);
-
-        // Verify and decode JWT
-        DecodedJWT decodedJWT = verifyToken(token);
-        System.out.println("Decoded JWT:");
-        System.out.println("Username: " + getDecodedUsername(decodedJWT));
-        System.out.println("Password: " + getDecodedPassword(decodedJWT));
-        Date expirationDate = decodedJWT.getExpiresAt();
-        System.out.println("Expiration Date: " + expirationDate);
     }
 }

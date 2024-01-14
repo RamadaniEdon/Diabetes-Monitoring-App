@@ -5,9 +5,8 @@ public class Patient {
     private String name;
     private int age;
     private String gender;
-    private int user_id; // Foreign key to Users table
+    private int user_id;
 
-    // Constructor
     public Patient(int patient_id, String name, int age, String gender, int user_id) {
         this.patient_id = patient_id;
         this.name = name;
@@ -23,16 +22,13 @@ public class Patient {
         this.user_id = userId;
     }
 
-    // Constructor 2
     public Patient(int patient_id) {
         this.patient_id = patient_id;
     }
 
-    // Constructor 3
     public Patient() {
     }
 
-    // Getters and Setters
     public int getPatientId() {
         return patient_id;
     }

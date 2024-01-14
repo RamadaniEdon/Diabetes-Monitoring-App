@@ -29,7 +29,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/users")
 public class UserResource {
 
-    // API to list all users
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN"})
@@ -43,7 +42,6 @@ public class UserResource {
         }
     }
 
-    // API to insert new user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN"})
@@ -58,7 +56,6 @@ public class UserResource {
         }
     }
 
-    // API to update existing user
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
@@ -74,7 +71,6 @@ public class UserResource {
         }
     }
 
-    // API to delete user
     @DELETE
     @Path("{id}")
     @RolesAllowed({"ADMIN"})
@@ -88,7 +84,6 @@ public class UserResource {
         }
     }
 
-    // API to get a single user
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)

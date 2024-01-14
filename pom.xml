@@ -65,6 +65,12 @@
       <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.heroku</groupId>
+      <artifactId>webapp-runner</artifactId>
+      <version>9.0.30.0</version> <!-- Use the appropriate version -->
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <properties>
     <jersey.version>3.1.0-M3</jersey.version>
@@ -87,8 +93,35 @@
         <version>3.2.1</version>
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
+          <appName>medication-app-cloud</appName>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.heroku.sdk</groupId>
+        <artifactId>heroku-maven-plugin</artifactId>
+        <version>3.0.7</version>
+      </plugin>
+      <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-dependency-plugin</artifactId>
+      <executions>
+        <execution>
+          <phase>prepare-package</phase>
+          <goals><goal>copy</goal></goals>
+          <configuration>
+            <artifactItems>
+              <artifactItem>
+                <groupId>com.heroku</groupId>
+                <artifactId>webapp-runner</artifactId>
+                <version>9.0.30.0</version> 
+                <destFileName>webapp-runner.jar</destFileName>
+              </artifactItem>
+            </artifactItems>
+            <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
     </plugins>
   </build>
 </project>

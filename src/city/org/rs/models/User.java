@@ -6,7 +6,7 @@ public class User {
     private String password;
     private String role;
 
-    // Constructor
+
     public User(int user_id, String username, String password, String role) {
         this.user_id = user_id;
         this.username = username;
@@ -20,16 +20,13 @@ public class User {
         this.role = role;
     }
     
-    //Constructor 2
   	public User(int userId) {
         this.user_id = userId;
   	}
 
-  	//Constructor 3
   	public User() {
   	}
 
-    // Getters and Setters
     public int getUserId() {
         return user_id;
     }

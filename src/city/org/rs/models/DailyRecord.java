@@ -1,10 +1,9 @@
 package city.org.rs.models;
 
-import java.sql.Date;
 
 public class DailyRecord {
     private int record_id;
-    private int patient_id; // Foreign key to Patients table
+    private int patient_id;
     private String date;
     private double blood_glucose_level;
     private double carb_intake;
@@ -14,7 +13,6 @@ public class DailyRecord {
 
     
 
-    // Constructor
     public DailyRecord(int record_id, int patient_id, String date, 
                        double blood_glucose_level, double carb_intake, int medication_id, double medication_dose) {
         this.record_id = record_id;
@@ -38,16 +36,13 @@ public class DailyRecord {
         
     }
     
-  //Constructor 2
   	public DailyRecord(int record_id) {
   		 this.record_id = record_id;
   		 }
 
-  	//Constructor 3
   	public DailyRecord() {
   	}
 
-    // Getters and Setters
     public int getRecordId() {
         return record_id;
     }

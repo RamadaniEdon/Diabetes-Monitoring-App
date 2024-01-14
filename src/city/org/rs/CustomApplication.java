@@ -9,7 +9,6 @@ public class CustomApplication extends ResourceConfig
 	{
 		packages("city.org.rs");
 
-		//Register Auth Filter here
 		register(AuthenticationFilter.class);
 	}
 }

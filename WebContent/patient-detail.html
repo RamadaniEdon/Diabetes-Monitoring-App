@@ -27,33 +27,33 @@
     <div class="patient-info">
       <table id="info-table" class="info-table">
         <tbody id="average">
-        <tr>
-          <th>ID</th>
-          <td id="patientId"></td>
-        </tr>
-        <tr>
-          <th>Name</th>
-          <td><input type="text" id="name" value="Prem Shahi" readonly></td>
-        </tr>
-        <tr>
-          <th>Age</th>
-          <td><input type="number" id="age" value="10" readonly></td>
-        </tr>
-        <tr>
-          <th>Gender</th>
-          <td>
-            <select id="gender" disabled>
-              <option value="">Select Gender</option>
-              <option value="male" selected>Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </td>
-        </tr>
-        <tr id="actions">
-          
-        </tr>
-      </tbody>
+          <tr>
+            <th>ID</th>
+            <td id="patientId"></td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <td><input type="text" id="name" value="Prem Shahi" readonly></td>
+          </tr>
+          <tr>
+            <th>Age</th>
+            <td><input type="number" id="age" value="10" readonly></td>
+          </tr>
+          <tr>
+            <th>Gender</th>
+            <td>
+              <select id="gender" disabled>
+                <option value="">Select Gender</option>
+                <option value="male" selected>Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </td>
+          </tr>
+          <tr id="actions">
+
+          </tr>
+        </tbody>
       </table>
     </div>
     <div class="graph-container">
@@ -105,12 +105,8 @@
     var isAdmin = false;
     $(document).ready(function () {
       getMyProfile().then(user => {
-        // if (user.role != 'physician') {
-        //   window.location.href = "./patients1.html";
-        // }
-        console.log(user)
         setPatientDetails();
-        if(user.role == "ADMIN"){
+        if (user.role == "ADMIN") {
           isAdmin = true;
           $('#actions').html(`<th>Actions</th>
           <td>
@@ -120,11 +116,65 @@
             <button id="delete-patient" class="delete-btn">Delete</button>
 
           </td>`)
+          getPatientAverages(dataValue).then(records => {
+          var rows =
+            `<tr>
+                <th>Average Blood Glucose Level:</th>
+                <td>
+                  ${records.averageGlucoseLevel}
+                </td>
+            </tr>
+            <tr>
+                <th>Average Carb Intake:</th>
+                <td>
+                  ${records.averageCarbIntake}
+                    
+                </td>
+            </tr>
+            `
+          $('#average').append(rows);
+
+        });
           refreshRecordTable();
         }
-        else{
+        else {
           refreshRecordTable();
         }
+
+        $('#edit-patient').click(function () {
+          setPatientBtnChanges(true);
+        });
+
+        $('#cancel-btn').click(function () {
+          setPatientBtnChanges(false);
+          setPatientDetails();
+        });
+
+        $('#confirm-btn').click(function () {
+          var patientId = dataValue;
+          var name = $('#name').val();
+          var age = $('#age').val();
+          var gender = $('#gender').val();
+          var data = {
+            "name": name,
+            "age": age,
+            "gender": gender
+          }
+          setPatientBtnChanges(false);
+          updatePatient(patientId, data).then(() => {
+            alert("Patient updated successfully");
+          });
+        })
+
+        $('#delete-patient').click(function () {
+          if (window.confirm("Are you sure you want to delete this patient?")) {
+            deletePatient(dataValue).then(() => {
+              window.location.href = "./patients1.html";
+            });
+          }
+
+        });
+        
       });
 
       function setPatientBtnChanges(isEditMode) {
@@ -147,7 +197,6 @@
         }
       }
       function setPatientDetails() {
-        console.log(dataValue);
         $('#patientId').text(dataValue);
 
         getPatient(dataValue).then(patient => {
@@ -157,46 +206,13 @@
         })
       }
 
-      $('#edit-patient').click(function () {
-        setPatientBtnChanges(true);
-      });
 
-      $('#cancel-btn').click(function () {
-        setPatientBtnChanges(false);
-        setPatientDetails();
-      });
-
-      $('#confirm-btn').click(function () {
-        var patientId = dataValue;
-        var name = $('#name').val();
-        var age = $('#age').val();
-        var gender = $('#gender').val();
-        var data = {
-          "name": name,
-          "age": age,
-          "gender": gender
-        }
-        setPatientBtnChanges(false);
-        updatePatient(patientId, data).then(() => {
-          alert("Patient updated successfully");
-        });
-      })
-
-      $('#delete-patient').click(function () {
-        if (window.confirm("Are you sure you want to delete this patient?")) {
-          deletePatient(dataValue).then(() => {
-            window.location.href = "./patients1.html";
-          });
-        }
-
-      });
       function refreshRecordTable(startDate = "", endDate = "") {
         getPatientRecords(dataValue, startDate, endDate).then(records => {
-          console.log(records);
           var rows;
-          if(!isAdmin)
-            rows = records.map(s => 
-          `<tr data-record-id="${s.recordId}" class="satient-row">
+          if (!isAdmin)
+            rows = records.map(s =>
+              `<tr data-record-id="${s.recordId}" class="satient-row">
                  <td><input type="date" value="${s.date}" readonly ></td>
                  <td><input type="number" value="${s.bloodGlucoseLevel}" step="0.25" readonly></td>
                  <td><input type="number" value="${s.carbIntake}" step="0.25" readonly></td>
@@ -205,10 +221,10 @@
                  <td id="recordManipulators">
                     </td>
              </tr>`
-          ).join('')
+            ).join('')
           else
             rows = records.map(s =>
-            `<tr data-record-id="${s.recordId}" class="satient-row">
+              `<tr data-record-id="${s.recordId}" class="satient-row">
                  <td><input type="date" value="${s.date}" readonly ></td>
                  <td><input type="number" value="${s.bloodGlucoseLevel}" step="0.25" readonly></td>
                  <td><input type="number" value="${s.carbIntake}" step="0.25" readonly></td>
@@ -221,8 +237,8 @@
                       <button class="delete-btn delete-buttons">Delete</button>
                     </td>
              </tr>`
-          ).join('');
-          
+            ).join('');
+
           var addi = `<tr>
               <td><input type="date" id="newDate" ></td>
               <td><input type="number" step="0.25" id="newGlucose" ></td>
@@ -240,19 +256,15 @@
           var bloodGlucoseLevels = records.map(record => record.bloodGlucoseLevel);
           var carbIntakes = records.map(record => record.carbIntake);
           $('.edit-buttons').click(function () {
-            // Find the closest 'tr' ancestor and get its 'data-record-id' attribute
             var recordId = $(this).closest('tr').data('record-id');
 
 
-
-            // Do something with the recordId (e.g., log it to console)
-            console.log('Edit button clicked for record ID:', recordId);
             setRecordBtnChanges(true, recordId);
           });
           $('#addNew').click(function () {
-            // Find the closest 'tr' ancestor and get its 'data-record-id' attribute
             var patientId = dataValue;
             var date = $('#newDate').val();
+            console.log(date== "");
             var glucoseValue = $('#newGlucose').val();
             var carbValue = $('#newCarb').val();
             var medicationId = $('#newMedId').val();
@@ -260,23 +272,21 @@
 
             var data = {
               "patientId": patientId,
-              "date": date,
               "bloodGlucoseLevel": glucoseValue,
               "carbIntake": carbValue,
               "medicationId": medicationId,
               "medicationDose": medicationDose
             }
-            console.log(data)
+            if(date != ""){
+              data["date"] = date;
+            }
             addDailyRecord(data).then(() => {
               alert("Record added successfully");
               refreshRecordTable();
             });
 
-            // Do something with the recordId (e.g., log it to console)
-            // console.log('Edit button clicked for record ID:', recordId);
           });
           $('.delete-buttons').click(function () {
-            // Find the closest 'tr' ancestor and get its 'data-record-id' attribute
             var recordId = $(this).closest('tr').data('record-id');
             if (window.confirm("Are you sure you want to delete this record?")) {
               deleteDailyRecord(recordId).then(() => {
@@ -284,20 +294,13 @@
                 refreshRecordTable();
               });
             }
-
-            // Do something with the recordId (e.g., log it to console)
-            console.log('Edit button clicked for record ID:', recordId);
           });
           $('.cancel-buttons').click(function () {
-            // Find the closest 'tr' ancestor and get its 'data-record-id' attribute
             setRecordBtnChanges(false, 3);
             var recordId = $(this).closest('tr').data('record-id');
 
-            // Do something with the recordId (e.g., log it to console)
-            console.log('Edit button clicked for record ID:', recordId);
           });
           $('.confirm-buttons').click(function () {
-            // Find the closest 'tr' ancestor and get its 'data-record-id' attribute
             var recordId = $(this).closest('tr').data('record-id');
 
             var date = $('tr[data-record-id="' + recordId + '"] input[type="date"]').val();
@@ -320,16 +323,14 @@
               setRecordBtnChanges(false, 0);
             });
 
-            // Do something with the recordId (e.g., log it to console)
-            console.log('Edit button clicked for record ID:', recordId);
+
           });
 
           renderChart(labels, bloodGlucoseLevels, carbIntakes);
         });
         getPatientAverages(dataValue).then(records => {
-          console.log(records);
-          var rows = 
-          `<tr>
+          var rows =
+            `<tr>
                 <th>Average Blood Glucose Level:</th>
                 <td>
                   ${records.averageGlucoseLevel}
@@ -343,7 +344,10 @@
                 </td>
             </tr>
             `
-            $('#average').append(rows);
+          $('#average tr:last-child').last().remove();
+          $('#average tr:last-child').last().remove();
+          $('#average').append(rows);
+
         });
       };
 
@@ -416,13 +420,7 @@
         $('#filter-btn').click(function () {
           var startDate = $('#from-date').val();
           var endDate = $('#to-date').val();
-          var patientId = 8;
-          console.log(startDate);
-          console.log(patientId);
           refreshRecordTable(startDate, endDate);
-          // getPatientRecords(patientId, startDate,endDate).then(records => {
-          //   refreshRecordTable();
-          // });
         });
       });
     });

@@ -9,59 +9,108 @@
   <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
   <script src="./function-management.js"></script>
 </head>
-  <aside class="sidebar">
-    <nav class="nav">
-      <ul>
-        <li><a href="patients.html">Patients</a></li>
-        <li><a href="medications.html">Medications</a></li>
-        <li><a href="users.html">Users</a></li>
-      </ul>
-    </nav>
-    <button class="logout-btn" onclick="logoutUser()">Logout</button>
-  </aside>
-  <main class="main-content">
-    <h1>Medications</h1>
-    <table id="medicationsTable" class="medications-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Unit</th>
-          <th>Actions</th>
-        </tr>
-        <tr id="addMenu">
-          
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Medication rows will be added here dynamically -->
-      </tbody>
-    </table>
-  </main>
-  <script>
-    $(document).ready(function () {
-      var selectedMedicationId = null;
-      var isAdmin = false;
-      getMyProfile().then(user => {
-        if (user.role == 'ADMIN'){
-          isAdmin = true;
-          $('#addMenu').html(`<td></td>
+<aside class="sidebar">
+  <nav class="nav">
+    <ul>
+      <li><a href="patients.html">Patients</a></li>
+      <li><a href="medications.html">Medications</a></li>
+      <li><a href="users.html">Users</a></li>
+    </ul>
+  </nav>
+  <button class="logout-btn" onclick="logoutUser()">Logout</button>
+</aside>
+<main class="main-content">
+  <h1>Medications</h1>
+  <table id="medicationsTable" class="medications-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Unit</th>
+        <th>Actions</th>
+      </tr>
+      <tr id="addMenu">
+
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Medication rows will be added here dynamically -->
+    </tbody>
+  </table>
+</main>
+<script>
+  $(document).ready(function () {
+    var selectedMedicationId = null;
+    var isAdmin = false;
+    getMyProfile().then(user => {
+      if (user.role == 'ADMIN') {
+        isAdmin = true;
+        $('#addMenu').html(`<td></td>
           <td><input type="text" id="medicationName" placeholder="Medication Name"></td>
           <td><input type="text" id="unit" placeholder="Unit"></td>
           <td>
             <button id="addMedication" class="add-btn">Add Medication</button>
           </td>`);
+      }
+      refreshMedicationTable();
+      $('#addMedication').click(function (e) {
+        e.preventDefault();
+        var medicationData = {
+          medicationName: $('#medicationName').val(),
+          unit: $('#unit').val()
+        };
+
+
+        if (selectedMedicationId) {
+
+          $('.add-btn').text('Update Medication').attr('id', 'updateMedication');
+          updateMedication(selectedMedicationId, medicationData).then(() => {
+            selectedMedicationId = null;
+            $('.add-btn').text('Add Medication').attr('id', 'addMedication');
+
+            refreshMedicationTable();
+            setFormState(false);
+
+
+          });
+        } else {
+          addMedication(medicationData).then(() => {
+            refreshMedicationTable();
+            setFormState(false);
+            selectedMedicationId = null;
+          });
+        };
+
+
+
+        function clearForm() {
+          setFormState(false);
         }
-        refreshMedicationTable();
+      })
+
+      $('#medicationsTable').on('click', '.medication-row', function () {
+        $('#medicationsTable tr').removeClass('selected');
+        $(this).addClass('selected');
+        selectedMedicationId = $(this).data('medicationId');
+
+
+        var medicationName = $(this).children('td').eq(1).text();
+        var unit = $(this).children('td').eq(2).text();
+
+
+
+        setFormState(true, medicationName, unit);
 
 
       });
 
-      function refreshMedicationTable() {
-        getAllMedications().then(medications => {
-          var rows;
-          if(isAdmin)
-            rows = medications.map(m =>
+    });
+
+    function refreshMedicationTable() {
+      getAllMedications().then(medications => {
+        var rows;
+        if (isAdmin)
+          rows = medications.map(m =>
             `<tr data-medication-id="${m.medicationId}" class="medication-row">
                         <td>${m.medicationId}</td>
                         <td>${m.medicationName}</td>
@@ -72,205 +121,54 @@
                         </td>
                     </tr>`
           ).join('');
-          else
-            rows = medications.map(m =>
+        else
+          rows = medications.map(m =>
             `<tr data-medication-id="${m.medicationId}" class="medication-row">
                         <td>${m.medicationId}</td>
                         <td>${m.medicationName}</td>
                         <td>${m.unit}</td>
                     </tr>`
           ).join('');
-          
-          $('#medicationsTable tbody').html(rows);
-        });
-      }
 
-      function setFormState(isEditMode, medicationName = '', unit = '') {
-        $('#medicationName').val(medicationName);
-        $('#unit').val(unit);
-        if (isEditMode) {
-          $('#addMedication').text('Update Medication');
-        } else {
-          $('#addMedication').text('Add Medication');
-        }
-      }
-
-      $('#medicationsTable').on('click', '.medication-row', function () {
-        $('#medicationsTable tr').removeClass('selected');
-        $(this).addClass('selected');
-        selectedMedicationId = $(this).data('medicationId');
-
-        var medicationName = $(this).children('td').eq(1).text();
-        var unit = $(this).children('td').eq(2).text();
-
-        setFormState(true, medicationName, unit);
-      });
-
-      $('#addMedication').click(function (e) {
-        e.preventDefault();
-        var medicationData = {
-          medicationName: $('#medicationName').val(),
-          unit: $('#unit').val()
-        };
-
-        var actionPromise = selectedMedicationId ?
-          updateMedication(selectedMedicationId, medicationData) :
-          addMedication(medicationData);
-
-        actionPromise.then(() => {
-          refreshMedicationTable();
-          setFormState(false);
-          selectedMedicationId = null;
-        });
-      });
-
-      $('#medicationsTable').on('click', '.delete-btn', function () {
-        var medicationId = $(this).closest('.medication-row').data('medicationId');
-        deleteMedication(medicationId).then(() => {
-          refreshMedicationTable();
-        })
-      });
-
-      $('#medicationsTable').on('click', '.edit-btn', function () {
-        var medicationRow = $(this).closest('.medication-row');
-        selectedMedicationId = medicationRow.data('medicationId');
-        var medicationName = medicationRow.find('td').eq(1).text();
-        var unit = medicationRow.find('td').eq(2).text();
-
-        setFormState(true, medicationName, unit);
-      });
-
-      function clearForm() {
-        setFormState(false);
-      }
-
-      
+        $('#addMedication').text('Add Medication').attr('id', 'addMedication');
+        selectedMedicationId = null;
 
 
-    });
-  </script>
+        $('#medicationsTable tbody').html(rows);
 
-
-  <!-- <script>
-
-    $(document).ready(function () {
-      var selectedMedicationId = null;
-
-      function refreshMedicationTable() {
-        getAllMedications().then(medications => {
-          var rows = medications.map(m =>
-            `<tr data-medication-id="${m.medicationId}" class="medication-row">
-                    <td>${m.medicationId}</td>
-                    <td>${m.medicationName}</td>
-                    <td>${m.unit}</td>
-                    <td>
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
-                    </td>
-                </tr>`
-          ).join('');
-          $('#medicationsTable tbody').html(rows);
-        });
-      }
-
-      $('#medicationsTable').on('click', '.medication-row', function () {
-        $('#medicationsTable tr').removeClass('selected');
-        $(this).addClass('selected');
-        selectedMedicationId = $(this).data('medicationId');
-
-        console.log('Selected medication ID:', selectedMedicationId);
-
-
-        var medicationName = $(this).children('td').eq(1).text();
-        var unit = $(this).children('td').eq(2).text();
-
-        $('#medicationName').val(medicationName);
-        $('#unit').val(unit);
-      });
-
-      $('#addMedication').click(function (e) {
-        e.preventDefault(); // Prevent default form submission if it's inside a form
-        var medicationData = {
-          medicationName: $('#medicationName').val(),
-          unit: $('#unit').val()
-        };
-
-        if (selectedMedicationId) {
-          updateMedication(selectedMedicationId, medicationData).then(() => {
-            refreshMedicationTable();
-            clearForm();
-          });
-        } else {
-          console.log(medicationData)
-          addMedication(medicationData).then(() => {
-            refreshMedicationTable();
-            clearForm();
-          });
-        }
-      });
-
-      $('#medicationsTable').on('click', '.delete-btn', function () {
-        var medicationRow = $(this).closest('.medication-row');
-        var medicationId = medicationRow.data('medicationId');
-
-        if (medicationId) {
+        $('#medicationsTable').on('click', '.delete-btn', function () {
+          var medicationId = $(this).closest('.medication-row').data('medicationId');
           deleteMedication(medicationId).then(() => {
             refreshMedicationTable();
-          });
-        } else {
-          alert('No medication ID found for deletion.');
-        }
-      });
+          })
+        });
 
-      $('#medicationsTable').on('click', '.edit-btn', function () {
-        var medicationRow = $(this).closest('.medication-row');
-        selectedMedicationId = medicationRow.data('medicationId');
-
-        if (selectedMedicationId) {
+        $('#medicationsTable').on('click', '.edit-btn', function () {
+          var medicationRow = $(this).closest('.medication-row');
+          selectedMedicationId = medicationRow.data('medicationId');
           var medicationName = medicationRow.find('td').eq(1).text();
           var unit = medicationRow.find('td').eq(2).text();
 
-          $('#medicationName').val(medicationName);
-          $('#unit').val(unit);
-          $('#addMedication').text('Update Medication').attr('medicationId', 'updateMedication');
-        } else {
-          alert('No medication selected for update.');
-        }
-      });
-
-      function resetAddButton() {
-        selectedMedicationId = null;
-        $('#addMedication').text('Add Medication').attr('id', 'addMedication');
-        $('#medicationsTable tr').removeClass('selected');
-        clearForm();
-      }
-
-      $(document).on('click', '#updateMedication', function () {
-        var medicationData = {
-          name: $('#medicationName').val(),
-          unit: $('#unit').val()
-        };
-
-        updateMedication(selectedMedicationId, medicationData).then(() => {
-          refreshMedicationTable();
-          resetAddButton();
-
-          $('#updateMedication').text('Add Medication').attr('medicationId', 'addMedication');
-
+          setFormState(true, medicationName, unit);
         });
       });
+    }
 
-      function clearForm() {
-        $('#medicationName').val('');
-        $('#unit').val('');
-        selectedMedicationId = null;
-        $('#medicationsTable tr').removeClass('selected');
+    function setFormState(isEditMode, medicationName = '', unit = '') {
+      $('#medicationName').val(medicationName);
+      $('#unit').val(unit);
+      if (isEditMode) {
+        $('#addMedication').text('Update Medication');
+      } else {
+        $('#addMedication').text('Add Medication');
       }
+    }
 
-      refreshMedicationTable();
-    });
 
-  </script> -->
-  </body>
+
+
+  });
+</script>
+</body>
 
 </html>

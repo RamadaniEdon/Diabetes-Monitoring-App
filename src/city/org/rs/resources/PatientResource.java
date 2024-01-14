@@ -26,7 +26,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/patients")
 public class PatientResource {
 
-    // API to list all patients
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN", "PHYSICIAN"})
@@ -49,7 +48,6 @@ public class PatientResource {
         }
     }
 
-    // API to insert new patient
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN"})
@@ -64,7 +62,6 @@ public class PatientResource {
         }
     }
 
-    // API to update existing patient
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("{id}")
@@ -80,7 +77,6 @@ public class PatientResource {
         }
     }
 
-    // API to delete patient
     @DELETE
     @Path("{id}")
     @RolesAllowed({"ADMIN"})
@@ -94,7 +90,6 @@ public class PatientResource {
         }
     }
 
-    // API to get a single patient
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)

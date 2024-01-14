@@ -1,21 +1,21 @@
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\models\Patient.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\models\Product.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\utils\JwtUtil.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\models\Medication.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\resources\PatientResource.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\ConnectionUtility.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\resources\MedicationResource.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\resources\UserResource.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\dao\DailyRecordDAO.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\dao\UserDAO.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\CustomApplication.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\dao\ProductDAO.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\resources\DailyRecordResource.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\AuthenticationFilter.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\models\DailyRecord.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\utils\PasswordUtil.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\dao\PatientDAO.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\utils\CORSFilter.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\resources\ProductResource.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\models\User.java
-C:\Users\user\Desktop\deri tash\Diabetes-Monitoring-App\src\city\org\rs\dao\MedicationDAO.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/resources/MedicationResource.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/dao/MedicationDAO.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/utils/Helpers.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/resources/PatientDailyRecordResource.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/ConnectionUtility.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/models/User.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/utils/CORSFilter.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/dao/PatientDAO.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/resources/UserResource.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/utils/PasswordUtil.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/models/Patient.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/resources/DailyRecordResource.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/models/DailyRecord.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/resources/PatientResource.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/dao/DailyRecordDAO.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/utils/Averages.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/utils/JwtUtil.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/CustomApplication.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/models/Medication.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/AuthenticationFilter.java
+/home/edon/Documents/fakulltet/git/Shkolla/Stage3/Cloud/Diabetes-Monitoring-App/src/city/org/rs/dao/UserDAO.java

@@ -12,8 +12,6 @@ import city.org.rs.utils.Averages;
 public class DailyRecordDAO {
 
 
-
-    // Method to add a new daily record
     public void addDailyRecord(DailyRecord record) throws SQLException {
         if (record.getDate() == null) {
             record.setDate(java.time.LocalDate.now().toString());
@@ -53,7 +51,6 @@ public class DailyRecordDAO {
         return false;
     }
 
-    // Method to retrieve a daily record by ID
     public DailyRecord getDailyRecord(int recordId) throws SQLException {
         String sql = "SELECT * FROM DailyRecords WHERE record_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -76,7 +73,6 @@ public class DailyRecordDAO {
         }
     }
 
-    // Method to update a daily record's details
     public void updateDailyRecord(DailyRecord record) throws SQLException {
         String sql = "UPDATE DailyRecords SET date = ?, blood_glucose_level = ?, carb_intake = ?, medication_id = ?, medication_dose = ? WHERE record_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -91,7 +87,6 @@ public class DailyRecordDAO {
         }
     }
 
-    // Method to delete a daily record
     public void deleteDailyRecord(int recordId) throws SQLException {
         String sql = "DELETE FROM DailyRecords WHERE record_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -101,7 +96,6 @@ public class DailyRecordDAO {
         }
     }
 
-    // Method to list all daily records
     public List<DailyRecord> getAllDailyRecords() throws SQLException {
         List<DailyRecord> records = new ArrayList<>();
         String sql = "SELECT * FROM DailyRecords";
@@ -123,7 +117,6 @@ public class DailyRecordDAO {
         return records;
     }
 
-    // Method to get daily records within a specified period
     public List<DailyRecord> getDailyRecordsInPeriod(Date startDate, Date endDate) throws SQLException {
         List<DailyRecord> records = new ArrayList<>();
         String sql = "SELECT * FROM DailyRecords WHERE date >= ? AND date <= ?";
@@ -148,7 +141,6 @@ public class DailyRecordDAO {
         return records;
     }
 
-    // Method to calculate the average blood glucose level over a specified period
     public Double getAverageBloodGlucoseLevel(Date startDate, Date endDate) throws SQLException {
         String sql = "SELECT AVG(blood_glucose_level) FROM DailyRecords WHERE date >= ? AND date <= ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -164,7 +156,6 @@ public class DailyRecordDAO {
         return null;
     }
 
-    // Method to calculate the average carb intake over a specified period
     public Double getAverageCarbIntake(Date startDate, Date endDate) throws SQLException {
         String sql = "SELECT AVG(carb_intake) FROM DailyRecords WHERE date >= ? AND date <= ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -276,15 +267,12 @@ public class DailyRecordDAO {
                     double avgCarb = resultSet.getDouble("avg_carb");
                     double avgDose = resultSet.getDouble("avg_dose");
     
-                    // Create and return the Averages object
                     return new Averages(avgGlucose, avgCarb, avgDose);
                 } else {
-                    // No records found
                     return null;
                 }
             }
         } catch (SQLException e) {
-            // Handle exceptions (log, throw, etc.)
             e.printStackTrace();
             return null;
         }

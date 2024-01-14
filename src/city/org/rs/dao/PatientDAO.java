@@ -10,7 +10,6 @@ import city.org.rs.models.User;
 
 public class PatientDAO {
 
-    // Method to add a new patient
     public void addPatient(Patient patient) throws SQLException {
         String sql = "INSERT INTO Patients (name, age, gender, user_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -23,7 +22,6 @@ public class PatientDAO {
         }
     }
 
-    // Method to retrieve a patient by ID
     public Patient getPatient(int patientId) throws SQLException {
         String sql = "SELECT * FROM Patients WHERE patient_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -44,7 +42,6 @@ public class PatientDAO {
         }
     }
 
-    // Method to update a patient's details
     public void updatePatient(Patient patient) throws SQLException {
         String sql = "UPDATE Patients SET name = ?, age = ?, gender = ? WHERE patient_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -57,7 +54,6 @@ public class PatientDAO {
         }
     }
 
-    // Method to delete a patient
     public void deletePatient(int patientId) throws SQLException {
         String sql = "DELETE FROM Patients WHERE patient_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -67,7 +63,6 @@ public class PatientDAO {
         }
     }
 
-    // Method to list all patients
     public List<Patient> getAllPatients() throws SQLException {
         List<Patient> patients = new ArrayList<>();
         String sql = "SELECT * FROM Patients";

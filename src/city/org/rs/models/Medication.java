@@ -5,7 +5,6 @@ package city.org.rs.models;
         private String medication_name;
         private String unit;
     
-        // Constructor
         public Medication(int medication_id, String medication_name, String unit) {
             this.medication_id = medication_id;
             this.medication_name = medication_name;
@@ -17,11 +16,9 @@ package city.org.rs.models;
             this.unit = unit;
         }
 
-        // Default constructor
         public Medication() {
         }
     
-        // Getters and Setters
         public int getMedicationId() {
             return medication_id;
         }
@@ -46,7 +43,6 @@ package city.org.rs.models;
             this.unit = unit;
         }
     
-        // Optional: Override toString method for easy printing of Medication objects
         @Override
         public String toString() {
             return "Medication{" +

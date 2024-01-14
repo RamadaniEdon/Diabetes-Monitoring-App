@@ -10,7 +10,6 @@ import city.org.rs.utils.PasswordUtil;
 
 public class UserDAO {
 
-    // Method to add a new user
     public void addUser(User user) throws SQLException {
         String sql = "INSERT INTO Users (username, password, role) VALUES (?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -23,7 +22,6 @@ public class UserDAO {
         }
     }
 
-    // Method to retrieve a user by ID
     public User getUser(int userId) throws SQLException {
         String sql = "SELECT * FROM Users WHERE user_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -42,14 +40,11 @@ public class UserDAO {
         }
     }
 
-    // Method to update a user's details
     public void updateUser(User user) throws SQLException {
         String sql;
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            // Update without changing the password
             sql = "UPDATE Users SET username = ?, role = ? WHERE user_id = ?";
         } else {
-            // Update including the password
             sql = "UPDATE Users SET username = ?, role = ?, password = ? WHERE user_id = ?";
         }
     
@@ -70,7 +65,6 @@ public class UserDAO {
         }
     }
 
-    // Method to delete a user
     public void deleteUser(int userId) throws SQLException {
         String sql = "DELETE FROM Users WHERE user_id = ?";
         try (Connection connection = ConnectionUtility.getConnection();
@@ -80,7 +74,6 @@ public class UserDAO {
         }
     }
 
-    // Method to list all users
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM Users";
