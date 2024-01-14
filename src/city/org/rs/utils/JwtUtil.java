@@ -5,6 +5,9 @@ import java.util.Date;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.JWTVerifier;
+
+import city.org.rs.AuthenticationFilter;
+
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class JwtUtil {
@@ -39,6 +42,10 @@ public class JwtUtil {
 
     public static String getDecodedPassword(DecodedJWT decodedJWT) {
         return decodedJWT.getClaim("password").asString();
+    }
+
+    public static String getAuthenticationToken(String authenticationHeader){
+        return authenticationHeader.replaceFirst(AuthenticationFilter.AUTHENTICATION_SCHEME + " ", "");
     }
 
     // Example usage
