@@ -515,6 +515,11 @@ function getPatientRecords(patientId = 8, startDate = "2011-10-10", endDate = "2
     return ajaxRequest(endpoints.patientRecords(patientId), 'GET',null,{"startDate": startDate, "endDate": endDate});
 }
 
+
+function getPatientAverages(patientId){
+    return ajaxRequest(endpoints.patientRecordAverages(patientId), 'GET');
+}
+
 // Function to set a cookie
 function setCookie(name, value, hours) {
     var expirationDate = new Date();
@@ -537,6 +542,7 @@ function getCookie(name) {
     }
     return null;
 }
+
 
 // Function to delete a cookie
 function deleteCookie(name) {

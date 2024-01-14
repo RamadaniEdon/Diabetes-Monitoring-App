@@ -26,6 +26,7 @@
     <h1>Patient Detail</h1>
     <div class="patient-info">
       <table id="info-table" class="info-table">
+        <tbody id="average">
         <tr>
           <th>ID</th>
           <td></td>
@@ -56,6 +57,7 @@
             <button class="delete-btn">Delete</button>
           </td>
         </tr>
+      </tbody>
       </table>
     </div>
     <div class="graph-container">
@@ -127,6 +129,29 @@
           var carbIntakes = records.map(record => record.carbIntake);
 
           renderChart(labels, bloodGlucoseLevels, carbIntakes);
+        });
+        getPatientAverages(6).then(records => {
+          console.log(records);
+          var rows = 
+          `<tr>
+                <th>Average Blood Glucose Level:</th>
+                <td>
+                    ${records.averageCarbIntake}
+                </td>
+            </tr>
+            <tr>
+                <th>Average Carb Intake:</th>
+                <td>
+                    ${records.averageGlucoseLevel}
+                </td>
+            </tr>
+            <tr>
+                <th>Average Carb Intake:</th>
+                <td>
+                    ${records.averageMedicationDose}
+                </td>
+            </tr>`
+            $('#average').append(rows);
         });
       };
 
