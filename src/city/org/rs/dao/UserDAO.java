@@ -102,4 +102,29 @@ public class UserDAO {
         }
     }
 
+    public String getUserRole(String username) throws SQLException {
+        String sql = "SELECT role FROM Users WHERE username = ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("role");
+            } else {
+                return null;
+            }
+        }
+    }
+
+    public boolean isUserPatient(User user, int id) throws SQLException {
+        String sql = "SELECT * FROM Patients WHERE user_id = ? AND patient_id = ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, user.getUserId());
+            statement.setInt(2, id);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next();
+        }
+    }
+
 }

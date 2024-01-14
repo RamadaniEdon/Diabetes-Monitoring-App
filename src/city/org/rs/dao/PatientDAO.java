@@ -6,6 +6,7 @@ import java.util.List;
 
 import city.org.rs.ConnectionUtility;
 import city.org.rs.models.Patient;
+import city.org.rs.models.User;
 
 public class PatientDAO {
 
@@ -74,6 +75,26 @@ public class PatientDAO {
         try (Connection connection = ConnectionUtility.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                patients.add(new Patient(
+                    resultSet.getInt("patient_id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("age"),
+                    resultSet.getString("gender"),
+                    resultSet.getInt("user_id")
+                ));
+            }
+        }
+        return patients;
+    }
+
+    public List<Patient> getPatientsByPhysician(User physician) throws SQLException {
+        List<Patient> patients = new ArrayList<>();
+        String sql = "SELECT * FROM Patients WHERE user_id = ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, physician.getUserId());
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 patients.add(new Patient(
                     resultSet.getInt("patient_id"),

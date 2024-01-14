@@ -100,11 +100,11 @@ public class DailyRecord {
         this.medication_dose  = medication_dose ;
     }
 
-    public int getMedication_id() {
+    public int getMedicationId() {
         return medication_id;
     }
 
-    public void setMedication_id(int medication_id) {
+    public void setMedicationId(int medication_id) {
         this.medication_id = medication_id;
     }
     @Override

@@ -7,10 +7,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 import city.org.rs.dao.DailyRecordDAO;
+import city.org.rs.dao.UserDAO;
 import city.org.rs.models.DailyRecord;
+import city.org.rs.models.User;
+import city.org.rs.utils.Helpers;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -26,11 +31,21 @@ public class DailyRecordResource {
     // API to list all daily records
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listDailyRecords() {
+    @RolesAllowed({"ADMIN", "PHYSICIAN"})
+    public Response listDailyRecords(@HeaderParam("Authorization") String authorizationHeader) {
+        String username = Helpers.getAuthenticationUsername(authorizationHeader);
         DailyRecordDAO dao = new DailyRecordDAO();
+        UserDAO userDAO = new UserDAO();
         try {
-            List<DailyRecord> records = dao.getAllDailyRecords();
-            return Response.ok(records, MediaType.APPLICATION_JSON).build();
+            User user = userDAO.getUserByUsername(username);
+            if(user.getRole().equals("ADMIN")) {
+                List<DailyRecord> records = dao.getAllDailyRecords();
+                return Response.ok(records, MediaType.APPLICATION_JSON).build();
+            }
+            else {
+                List<DailyRecord> records = dao.getDailyRecordsByPhysician(user);
+                return Response.ok(records, MediaType.APPLICATION_JSON).build();
+            }
         } catch (SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily records").build();
         }

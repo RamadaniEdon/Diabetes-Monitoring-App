@@ -7,12 +7,14 @@ import java.util.List;
 
 import city.org.rs.dao.UserDAO;
 import city.org.rs.models.User;
+import city.org.rs.utils.Helpers;
 import city.org.rs.utils.JwtUtil;
 import city.org.rs.utils.PasswordUtil;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -115,6 +117,15 @@ public class UserResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving user").build();
         }
 
+    }
+
+    @GET
+    @Path("/TEST")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
+    public String test(@HeaderParam("Authorization") String authorizationHeader){
+        String username = Helpers.getAuthenticationUsername(authorizationHeader);
+        return username;
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import city.org.rs.ConnectionUtility;
 import city.org.rs.models.DailyRecord;
+import city.org.rs.models.User;
 
 public class DailyRecordDAO {
 
@@ -18,7 +19,7 @@ public class DailyRecordDAO {
             statement.setString(2, record.getDate());
             statement.setDouble(3, record.getBloodGlucoseLevel());
             statement.setDouble(4, record.getCarbIntake());
-            statement.setInt(5, record.getMedication_id());
+            statement.setInt(5, record.getMedicationId());
             statement.setDouble(6, record.getMedicationDose());
             statement.executeUpdate();
         }
@@ -56,7 +57,7 @@ public class DailyRecordDAO {
             statement.setString(2, record.getDate());
             statement.setDouble(3, record.getBloodGlucoseLevel());
             statement.setDouble(4, record.getCarbIntake());
-            statement.setInt(5, record.getMedication_id());
+            statement.setInt(5, record.getMedicationId());
             statement.setDouble(6, record.getMedicationDose());
             statement.setInt(7, record.getRecordId());
             statement.executeUpdate();
@@ -150,5 +151,49 @@ public class DailyRecordDAO {
             }
         }
         return null;
+    }
+
+    public List<DailyRecord> getDailyRecordsByPhysician(User user) throws SQLException{
+        List<DailyRecord> records = new ArrayList<>();
+        String sql = "SELECT * FROM DailyRecords WHERE patient_id IN (SELECT patient_id FROM Patients WHERE user_id = ?)";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, user.getUserId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                records.add(new DailyRecord(
+                    resultSet.getInt("record_id"),
+                    resultSet.getInt("patient_id"),
+                    resultSet.getString("date"),
+                    resultSet.getDouble("blood_glucose_level"),
+                    resultSet.getDouble("carb_intake"),
+                    resultSet.getInt("medication_id"),
+                    resultSet.getDouble("medication_dose")
+                ));
+            }
+        }
+        return records;
+    }
+
+    public List<DailyRecord> getDailyRecordsByPatient(int patientId) throws SQLException{
+        List<DailyRecord> records = new ArrayList<>();
+        String sql = "SELECT * FROM DailyRecords WHERE patient_id = ?";
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, patientId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                records.add(new DailyRecord(
+                    resultSet.getInt("record_id"),
+                    resultSet.getInt("patient_id"),
+                    resultSet.getString("date"),
+                    resultSet.getDouble("blood_glucose_level"),
+                    resultSet.getDouble("carb_intake"),
+                    resultSet.getInt("medication_id"),
+                    resultSet.getDouble("medication_dose")
+                ));
+            }
+        }
+        return records;
     }
 }
