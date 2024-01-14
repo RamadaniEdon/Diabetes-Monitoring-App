@@ -61,7 +61,10 @@ public class DailyRecordResource {
             URI uri = new URI("/dailyrecords/" + record.getRecordId());
             return Response.created(uri).build();
         } catch (SQLException | URISyntaxException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding daily record").build();
+            if(e.getMessage().toString().equals("Record already exists"))
+                return Response.status(Response.Status.CONFLICT).entity("Record already exists").build();
+            else
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error adding daily record").build();
         }
     }
 

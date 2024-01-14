@@ -7,11 +7,20 @@ import java.util.List;
 import city.org.rs.ConnectionUtility;
 import city.org.rs.models.DailyRecord;
 import city.org.rs.models.User;
+import city.org.rs.utils.Averages;
 
 public class DailyRecordDAO {
 
+
+
     // Method to add a new daily record
     public void addDailyRecord(DailyRecord record) throws SQLException {
+        if (record.getDate() == null) {
+            record.setDate(java.time.LocalDate.now().toString());
+        }
+        if(isRecordExists(record.getPatientId(), record.getDate())){
+            throw new SQLException("Record already exists");
+        }
         String sql = "INSERT INTO DailyRecords (patient_id, date, blood_glucose_level, carb_intake, medication_id, medication_dose) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = ConnectionUtility.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -23,6 +32,25 @@ public class DailyRecordDAO {
             statement.setDouble(6, record.getMedicationDose());
             statement.executeUpdate();
         }
+    }
+    private boolean isRecordExists(int patientId, String date) throws SQLException {
+        String sql = "SELECT COUNT(*) AS count FROM DailyRecords WHERE patient_id = ? AND date = ?";
+    
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+    
+            statement.setInt(1, patientId);
+            statement.setString(2, date);
+    
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt("count");
+                    return count > 0;
+                }
+            }
+        }
+    
+        return false;
     }
 
     // Method to retrieve a daily record by ID
@@ -175,25 +203,92 @@ public class DailyRecordDAO {
         return records;
     }
 
-    public List<DailyRecord> getDailyRecordsByPatient(int patientId) throws SQLException{
-        List<DailyRecord> records = new ArrayList<>();
-        String sql = "SELECT * FROM DailyRecords WHERE patient_id = ?";
+    public List<DailyRecord> getDailyRecordsByPatient(int patientId, String startDate, String endDate) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT * FROM DailyRecords WHERE patient_id = ?");
+        
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(patientId);
+    
+        if (startDate != null) {
+            sql.append(" AND date >= ?");
+            parameters.add(startDate);
+        }
+    
+        if (endDate != null) {
+            sql.append(" AND date <= ?");
+            parameters.add(endDate);
+        }
+    
+        List<DailyRecord> dailyRecords = new ArrayList<>();
+    
         try (Connection connection = ConnectionUtility.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, patientId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                records.add(new DailyRecord(
-                    resultSet.getInt("record_id"),
-                    resultSet.getInt("patient_id"),
-                    resultSet.getString("date"),
-                    resultSet.getDouble("blood_glucose_level"),
-                    resultSet.getDouble("carb_intake"),
-                    resultSet.getInt("medication_id"),
-                    resultSet.getDouble("medication_dose")
-                ));
+             PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+    
+            for (int i = 0; i < parameters.size(); i++) {
+                statement.setObject(i + 1, parameters.get(i));
+            }
+    
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    DailyRecord dailyRecord = new DailyRecord(
+                            resultSet.getInt("record_id"),
+                            resultSet.getInt("patient_id"),
+                            resultSet.getString("date"),
+                            resultSet.getDouble("blood_glucose_level"),
+                            resultSet.getDouble("carb_intake"),
+                            resultSet.getInt("medication_id"),
+                            resultSet.getDouble("medication_dose")
+                    );
+                    dailyRecords.add(dailyRecord);
+                }
             }
         }
-        return records;
+    
+        return dailyRecords;
     }
+
+
+    public Averages getAverages(int patientId, String startDate, String endDate) {
+        StringBuilder sql = new StringBuilder("SELECT AVG(blood_glucose_level) AS avg_glucose, AVG(carb_intake) AS avg_carb, AVG(medication_dose) AS avg_dose FROM DailyRecords WHERE patient_id = ?");
+    
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(patientId);
+    
+        if (startDate != null) {
+            sql.append(" AND date >= ?");
+            parameters.add(startDate);
+        }
+    
+        if (endDate != null) {
+            sql.append(" AND date <= ?");
+            parameters.add(endDate);
+        }
+    
+        try (Connection connection = ConnectionUtility.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+    
+            for (int i = 0; i < parameters.size(); i++) {
+                statement.setObject(i + 1, parameters.get(i));
+            }
+    
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    double avgGlucose = resultSet.getDouble("avg_glucose");
+                    double avgCarb = resultSet.getDouble("avg_carb");
+                    double avgDose = resultSet.getDouble("avg_dose");
+    
+                    // Create and return the Averages object
+                    return new Averages(avgGlucose, avgCarb, avgDose);
+                } else {
+                    // No records found
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            // Handle exceptions (log, throw, etc.)
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 }

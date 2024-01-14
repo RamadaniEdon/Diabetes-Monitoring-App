@@ -9,6 +9,7 @@ import city.org.rs.dao.UserDAO;
 import city.org.rs.models.DailyRecord;
 import city.org.rs.models.Patient;
 import city.org.rs.models.User;
+import city.org.rs.utils.Averages;
 import city.org.rs.utils.Helpers;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.GET;
@@ -29,17 +30,36 @@ public class PatientDailyRecordResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({"ADMIN", "PHYSICIAN"})
   @Path("{id}/dailyrecords")
-  public Response getPatientDailyRecords(@PathParam("id") int id, @HeaderParam("Authorization") String authorizationHeader) {
+  public Response getPatientDailyRecords(@PathParam("id") int id,@HeaderParam("startDate") String startDate, @HeaderParam("endDate") String endDate, @HeaderParam("Authorization") String authorizationHeader) {
     String username = Helpers.getAuthenticationUsername(authorizationHeader);
     try {
       User user = userDAO.getUserByUsername(username);
       if(!user.getRole().equals("ADMIN") && !userDAO.isUserPatient(user, id)) {
         return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
       }
-      List<DailyRecord> records = dailyRecordDAO.getDailyRecordsByPatient(id);
+      List<DailyRecord> records = dailyRecordDAO.getDailyRecordsByPatient(id, startDate, endDate);
       return Response.ok(records, MediaType.APPLICATION_JSON).build();
     } catch (SQLException e) {
       return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily records").build();
     }
   }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({"ADMIN", "PHYSICIAN"})
+  @Path("{id}/dailyrecords/average")
+  public Response getPatientDailyRecordAverages(@PathParam("id") int id,@HeaderParam("startDate") String startDate,@HeaderParam("endDate") String endDate, @HeaderParam("Authorization") String authorizationHeader) {
+    String username = Helpers.getAuthenticationUsername(authorizationHeader);
+    try {
+      User user = userDAO.getUserByUsername(username);
+      if(!user.getRole().equals("ADMIN") && !userDAO.isUserPatient(user, id)) {
+        return Response.status(Response.Status.FORBIDDEN).entity("Access denied").build();
+      }
+      Averages averages = dailyRecordDAO.getAverages(id, startDate, endDate);
+      return Response.ok(averages, MediaType.APPLICATION_JSON).build();
+    } catch (SQLException e) {
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error retrieving daily records").build();
+    }
+  }
+
 }
