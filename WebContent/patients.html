@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <title>Patient Management</title>
     <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="./function-management.js"></script>
+
     <style>
         /* Add your CSS styling here */
+        .selected {
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
@@ -18,38 +23,135 @@
         <button type="submit">Add Patient</button>
     </form>
 
+    <h2>Patients</h2>
+    <table id="patientsTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>User ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Patients will be listed here -->
+        </tbody>
+    </table>
+
+    <button id="updatePatient">Update Selected Patient</button>
+    <button id="deletePatient">Delete Selected Patient</button>
+
+ 
     <script>
-        $(document).ready(function(){
-            $("#addPatientForm").on('submit', function(e){
-                e.preventDefault();
-                addPatient();
-            });
+       
+       $(document).ready(function() {
+    var selectedPatientId = null;
+
+    function refreshPatientTable() {
+        getAllPatients().then(patients => {
+            console.log(patients);
+            var rows = patients.map(p => 
+                `<tr data-patient-id="${p.patientId}" class="patient-row">
+                    <td>${p.name}</td>
+                    <td>${p.age}</td>
+                    <td>${p.gender}</td>
+                    <td>${p.userId}</td>
+                </tr>`
+            ).join('');
+            $('#patientsTable tbody').html(rows);
         });
+    }
 
-        function addPatient() {
-    var patientData = {
-        name: $("#name").val(),
-        age: $("#age").val(),
-        gender: $("#gender").val(),
-        userId: $("#userId").val() // Make sure this matches the ID in your HTML
-    };
+    $('#patientsTable').on('click', '.patient-row', function() {
+        $('#patientsTable tr').removeClass('selected');
+        $(this).addClass('selected');
+        selectedPatientId = $(this).data('patientId');
 
-    $.ajax({
-        url: 'http://localhost:8080/MyWebsite-0.0.1-SNAPSHOT/rest/patients', // Update with your correct URL
-        type: 'POST',
-        contentType: 'application/json',
-        dataType: 'json', // Expect a JSON response
-        data: JSON.stringify(patientData),
-        success: function(response) {
-            alert('Patient added successfully!');
-        },
-        error: function(xhr, status, error) {
-            alert('Error adding patient: ' + xhr.status + ' ' + xhr.responseText);
+        // Debugging
+        console.log('Selected patient ID:', selectedPatientId);
+
+        // Load patient data into form for editing
+        var patientName = $(this).children('td').eq(0).text();
+        var patientAge = $(this).children('td').eq(1).text();
+        var patientGender = $(this).children('td').eq(2).text();
+        var userId = $(this).children('td').eq(3).text();
+
+        
+        $('#name').val(patientName);
+        $('#age').val(patientAge);
+        $('#gender').val(patientGender);
+        $('#userId').val(userId);
+    });
+
+    $('#addPatientForm').submit(function(e) {
+        e.preventDefault();
+        var patientData = {
+            name: $('#name').val(),
+            age: parseInt($('#age').val(), 10),
+            gender: $('#gender').val(),
+            userId: parseInt( $('#userId').val())
+        
+        };
+
+        if (selectedPatientId) {
+            updatePatient(selectedPatientId, patientData).then(() => {
+                refreshPatientTable();
+                clearForm();
+            });
+        } else {
+            addPatient(patientData).then(() => {
+                refreshPatientTable();
+                clearForm();
+            });
         }
     });
-}
+
+    $('#deletePatient').click(function() {
+        if (selectedPatientId) {
+            deletePatient(selectedPatientId).then(() => {
+                refreshPatientTable();
+                clearForm();
+            });
+        } else {
+            alert('No patient selected for deletion.');
+        }
+    });
+
+    $('#updatePatient').click(function() {
+        if (selectedPatientId) {
+            var patientData = {
+                name: $('#name').val(),
+                age: parseInt($('#age').val(), 10),
+                gender: $('#gender').val(),
+                userId: parseInt( $('#userId').val())
+            };
+            updatePatient(selectedPatientId, patientData).then(() => {
+                refreshPatientTable();
+                clearForm();
+            }).catch(error => {
+                console.error('Update failed:', error);
+                alert('Update failed. Check console for details.');
+            });
+        } else {
+            alert('No patient selected for update.');
+        }
+    });
+
+    function clearForm() {
+        $('#name').val('');
+        $('#age').val('');
+        $('#gender').val('');
+        $('#userId').val('');
+        selectedPatientId = null;
+        $('#patientsTable tr').removeClass('selected');
+    }
+
+    refreshPatientTable();
+});
+
 
 
     </script>
+
 </body>
 </html>
