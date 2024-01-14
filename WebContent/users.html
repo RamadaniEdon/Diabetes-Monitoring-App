@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./function-management.js"></script>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <nav class="nav">
+      <ul>
+        <li><a href="patients.html">Patients</a></li>
+        <li><a href="medications.html">Medications</a></li>
+        <li><a href="users.html">Users</a></li>
+      </ul>
+    </nav>
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+  </aside>
+  <main class="main-content">
+    <h1>Users</h1>
+    <table id="usersTable" class="users-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="text" id="username" placeholder="Username"></td>
+          <td><input type="password" id="password" placeholder="password"></td>
+          <td>
+            <select id="role">
+              <option value="ADMIN">Admin</option>
+              <option value="PHYSICIAN">Physician</option>
+            </select>
+          </td>
+          <td>
+            <button id="addUser" class="add-btn">Add User</button>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- <td>1</td>
+          <td>Prem Shahi</td>
+          <td>*********</td>
+          <td>Admin</td>
+          <td>
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+          </td> -->
+        </tr>
+        <!-- More rows can be added here -->
+      </tbody>
+    </table>
+  </main>
+  <script>
+    $(document).ready(function () {
+      var selectedUserId = null;
+      getMyProfile().then(user => {
+        if (user.role != 'ADMIN') {
+          window.location.href = './patients.html';
+        }
+      });
+      function refreshUserTable() {
+        getAllUsers().then(users => {
+          var rows = users.map(u =>
+            `<tr data-user-id="${u.userId}" class="user-row">
+                        <td><input type="number" value="${u.userId}" readonly disabled></td>
+                        <td><input type="text" value="${u.username}" readonly disabled></td>
+                        <td></td>
+                        <td>${u.role}</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="cancel-btn delete-btn" style="display: none;">Cancel</button>
+                            <button class="save-btn edit-btn" style="display: none;">Save</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>`
+          ).join('');
+          $('#usersTable tbody').html(rows);
+        });
+        $('.add-btn').text('Add User').attr('id', 'addUser');
+          selectedUserId = null;
+      }
+
+      refreshUserTable();
+
+      $('#addUser').click(function () {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var role = $('#role').val();
+        if (username && role) {
+          var data = {
+            username: username,
+            password: password,
+            role: role
+          };
+        }
+
+        if (selectedUserId) {
+
+          $('#addUser').text('Update User').attr('id', 'updateUser');
+        
+        updateUser(selectedUserId, data).then(() => {
+          refreshUserTable();
+          setFormState(false); 
+        });
+      } else {        
+        addUser(data).then(() => {
+          refreshUserTable();
+          $('#username').val('');
+          $('#password').val('');
+          $('#role').val('ADMIN');
+        });
+      }
+      })
+    
+      $('#usersTable').on('click', '.edit-btn', function () {
+        var userId = $(this).closest('.user-row').data('user-id');
+        selectedUserId = userId;
+        var row = $(this).closest('.user-row');
+        var role = $(row).find('td').eq(3).text();
+        var userId = $(row).find('input[type="number"]').val();
+        var username = $(row).find('input[type="text"]').val();
+
+
+       
+        setFormState(true, username, role);
+      });
+
+      function setFormState(isEditMode, username = '', role = '') {
+        $('#username').val(username);
+        $('#role').val(role);
+        if (isEditMode) {
+          $('#addUser').text('Update User');
+        } else {
+          $('#addUser').text('Add User');
+        }
+      }
+
+      $('#usersTable').on('click', '.delete-btn', function () {
+        var userId = $(this).closest('.user-row').data('userId');
+        deleteUser(userId).then(() => {
+          refreshUserTable();
+        });
+      });
+
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Detail</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./function-management.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <nav class="nav">
+      <ul>
+        <li><a href="patients.html">Patients</a></li>
+        <li><a href="medications.html">Medications</a></li>
+        <li><a href="users.html">Users</a></li>
+      </ul>
+    </nav>
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+  </aside>
+  <main class="main-content">
+    <h1>Patient Detail</h1>
+    <div class="patient-info">
+      <table id="info-table" class="info-table">
+        <tbody id="average">
+          <tr>
+            <th>ID</th>
+            <td id="patientId"></td>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <td><input type="text" id="name" value="Prem Shahi" readonly></td>
+          </tr>
+          <tr>
+            <th>Age</th>
+            <td><input type="number" id="age" value="10" readonly></td>
+          </tr>
+          <tr>
+            <th>Gender</th>
+            <td>
+              <select id="gender" disabled>
+                <option value="">Select Gender</option>
+                <option value="male" selected>Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </td>
+          </tr>
+          <tr id="actions">
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="graph-container">
+      <canvas id="myChart"></canvas>
+    </div>
+    <div class="date-filter">
+      <label for="from-date">From:</label>
+      <input type="date" id="from-date" name="from-date">
+
+      <label for="to-date">To:</label>
+      <input type="date" id="to-date" name="to-date">
+
+      <button type="button" id="filter-btn">Filter</button>
+    </div>
+    <div class="data-table">
+      <table id="records-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Glucose Level</th>
+            <th>Carb Intake</th>
+            <th>Medication</th>
+            <th>Dosage</th>
+            <th>Actions</th> <!-- Added Actions Column -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2024-01-05</td>
+            <td>125.00</td>
+            <td>40.00</td>
+            <td>Insulin</td>
+            <td>30 ml</td>
+            <td>
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+
+            </td>
+          </tr>
+          <!-- More rows can be added here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var dataValue = urlParams.get('data');
+    var editableRercordId = null;
+    var isAdmin = false;
+    $(document).ready(function () {
+      getMyProfile().then(user => {
+        setPatientDetails();
+        if (user.role == "ADMIN") {
+          isAdmin = true;
+          $('#actions').html(`<th>Actions</th>
+          <td>
+            <button id="edit-patient" class="edit-btn">Edit</button>
+            <button id="cancel-btn" class="delete-btn cancel-btn" style="display: none;">Cancel</button>
+            <button id="confirm-btn" class="edit-btn confirm-btn" style="display: none;">Confirm</button>
+            <button id="delete-patient" class="delete-btn">Delete</button>
+
+          </td>`)
+          getPatientAverages(dataValue).then(records => {
+          var rows =
+            `<tr>
+                <th>Average Blood Glucose Level:</th>
+                <td>
+                  ${records.averageGlucoseLevel}
+                </td>
+            </tr>
+            <tr>
+                <th>Average Carb Intake:</th>
+                <td>
+                  ${records.averageCarbIntake}
+                    
+                </td>
+            </tr>
+            `
+          $('#average').append(rows);
+
+        });
+          refreshRecordTable();
+        }
+        else {
+          refreshRecordTable();
+        }
+
+        $('#edit-patient').click(function () {
+          setPatientBtnChanges(true);
+        });
+
+        $('#cancel-btn').click(function () {
+          setPatientBtnChanges(false);
+          setPatientDetails();
+        });
+
+        $('#confirm-btn').click(function () {
+          var patientId = dataValue;
+          var name = $('#name').val();
+          var age = $('#age').val();
+          var gender = $('#gender').val();
+          var data = {
+            "name": name,
+            "age": age,
+            "gender": gender
+          }
+          setPatientBtnChanges(false);
+          updatePatient(patientId, data).then(() => {
+            alert("Patient updated successfully");
+          });
+        })
+
+        $('#delete-patient').click(function () {
+          if (window.confirm("Are you sure you want to delete this patient?")) {
+            deletePatient(dataValue).then(() => {
+              window.location.href = "./patients1.html";
+            });
+          }
+
+        });
+        
+      });
+
+      function setPatientBtnChanges(isEditMode) {
+        if (isEditMode) {
+          $('#name').removeAttr('readonly');
+          $('#age').removeAttr('readonly');
+          $('#gender').removeAttr('disabled');
+          $('#edit-patient').hide();
+          $('#delete-patient').hide();
+          $('#cancel-btn').show();
+          $('#confirm-btn').show();
+        } else {
+          $('#name').attr('readonly', true);
+          $('#age').attr('readonly', true);
+          $('#gender').attr('disabled', true);
+          $('#edit-patient').show();
+          $('#delete-patient').show();
+          $('#cancel-btn').hide();
+          $('#confirm-btn').hide();
+        }
+      }
+      function setPatientDetails() {
+        $('#patientId').text(dataValue);
+
+        getPatient(dataValue).then(patient => {
+          $('#name').val(patient.name);
+          $('#age').val(patient.age);
+          $('#gender').val(patient.gender);
+        })
+      }
+
+
+      function refreshRecordTable(startDate = "", endDate = "") {
+        getPatientRecords(dataValue, startDate, endDate).then(records => {
+          var rows;
+          if (!isAdmin)
+            rows = records.map(s =>
+              `<tr data-record-id="${s.recordId}" class="satient-row">
+                 <td><input type="date" value="${s.date}" readonly ></td>
+                 <td><input type="number" value="${s.bloodGlucoseLevel}" step="0.25" readonly></td>
+                 <td><input type="number" value="${s.carbIntake}" step="0.25" readonly></td>
+                 <td><input type="number" value="${s.medicationId}" readonly></td>
+                 <td><input type="number" value="${s.medicationDose}" step="0.25" readonly></td>
+                 <td id="recordManipulators">
+                    </td>
+             </tr>`
+            ).join('')
+          else
+            rows = records.map(s =>
+              `<tr data-record-id="${s.recordId}" class="satient-row">
+                 <td><input type="date" value="${s.date}" readonly ></td>
+                 <td><input type="number" value="${s.bloodGlucoseLevel}" step="0.25" readonly></td>
+                 <td><input type="number" value="${s.carbIntake}" step="0.25" readonly></td>
+                 <td><input type="number" value="${s.medicationId}" readonly></td>
+                 <td><input type="number" value="${s.medicationDose}" step="0.25" readonly></td>
+                 <td id="recordManipulators">
+                      <button class="edit-btn edit-buttons">Edit</button>
+                      <button class="delete-btn cancel-buttons" style="display: none">Cancel</button>
+                      <button class="edit-btn confirm-buttons" style="display: none">Confirm</button>
+                      <button class="delete-btn delete-buttons">Delete</button>
+                    </td>
+             </tr>`
+            ).join('');
+
+          var addi = `<tr>
+              <td><input type="date" id="newDate" ></td>
+              <td><input type="number" step="0.25" id="newGlucose" ></td>
+              <td><input type="number" step="0.25" id="newCarb" step="0.05"></td>
+              <td><input type="number" id="newMedId" ></td>
+              <td><input type="number" step="0.25" id="newMedDose" ></td>
+              <td>
+                <button id="addNew" class="edit-btn">Add</button>
+
+              </td>
+            </tr>`
+          $('#records-table tbody').html(addi + rows);
+
+          var labels = records.map(record => record.date);
+          var bloodGlucoseLevels = records.map(record => record.bloodGlucoseLevel);
+          var carbIntakes = records.map(record => record.carbIntake);
+          $('.edit-buttons').click(function () {
+            var recordId = $(this).closest('tr').data('record-id');
+
+
+            setRecordBtnChanges(true, recordId);
+          });
+          $('#addNew').click(function () {
+            var patientId = dataValue;
+            var date = $('#newDate').val();
+            console.log(date== "");
+            var glucoseValue = $('#newGlucose').val();
+            var carbValue = $('#newCarb').val();
+            var medicationId = $('#newMedId').val();
+            var medicationDose = $('#newMedDose').val();
+
+            var data = {
+              "patientId": patientId,
+              "bloodGlucoseLevel": glucoseValue,
+              "carbIntake": carbValue,
+              "medicationId": medicationId,
+              "medicationDose": medicationDose
+            }
+            if(date != ""){
+              data["date"] = date;
+            }
+            addDailyRecord(data).then(() => {
+              alert("Record added successfully");
+              refreshRecordTable();
+            });
+
+          });
+          $('.delete-buttons').click(function () {
+            var recordId = $(this).closest('tr').data('record-id');
+            if (window.confirm("Are you sure you want to delete this record?")) {
+              deleteDailyRecord(recordId).then(() => {
+                alert("Record deleted successfully")
+                refreshRecordTable();
+              });
+            }
+          });
+          $('.cancel-buttons').click(function () {
+            setRecordBtnChanges(false, 3);
+            var recordId = $(this).closest('tr').data('record-id');
+
+          });
+          $('.confirm-buttons').click(function () {
+            var recordId = $(this).closest('tr').data('record-id');
+
+            var date = $('tr[data-record-id="' + recordId + '"] input[type="date"]').val();
+            var glucoseValue = $('tr[data-record-id="' + recordId + '"] input[type="number"]').eq(0).val();
+            var carbValue = $('tr[data-record-id="' + recordId + '"] input[type="number"]').eq(1).val();
+            var medicationId = $('tr[data-record-id="' + recordId + '"] input[type="number"]').eq(2).val();
+            var medicationDose = $('tr[data-record-id="' + recordId + '"] input[type="number"]').eq(3).val();
+
+            var data = {
+              "date": date,
+              "bloodGlucoseLevel": glucoseValue,
+              "carbIntake": carbValue,
+              "medicationId": medicationId,
+              "medicationDose": medicationDose
+            }
+
+            updateDailyRecord(recordId, data).then(() => {
+              alert("Record updated successfully");
+              refreshRecordTable();
+              setRecordBtnChanges(false, 0);
+            });
+
+
+          });
+
+          renderChart(labels, bloodGlucoseLevels, carbIntakes);
+        });
+        getPatientAverages(dataValue).then(records => {
+          var rows =
+            `<tr>
+                <th>Average Blood Glucose Level:</th>
+                <td>
+                  ${records.averageGlucoseLevel}
+                </td>
+            </tr>
+            <tr>
+                <th>Average Carb Intake:</th>
+                <td>
+                  ${records.averageCarbIntake}
+                    
+                </td>
+            </tr>
+            `
+          $('#average tr:last-child').last().remove();
+          $('#average tr:last-child').last().remove();
+          $('#average').append(rows);
+
+        });
+      };
+
+      function setRecordBtnChanges(isEditMode, recordId) {
+        if (isEditMode) {
+          setRecordBtnChanges(false, 0);
+          $('tr[data-record-id="' + recordId + '"] input').prop('readonly', false);
+          $('tr[data-record-id="' + recordId + '"] .edit-buttons, tr[data-record-id="' + recordId + '"] .delete-buttons').hide();
+          $('tr[data-record-id="' + recordId + '"] .cancel-buttons, tr[data-record-id="' + recordId + '"] .confirm-buttons').show();
+          // $('.edit-buttons').hide();
+          // $('.delete-buttons').hide();
+          // $('.cancel-buttons').show();
+          // $('.confirm-buttons').show();
+          // $('#records-table input').removeAttr('readonly');
+        } else {
+          $('.edit-buttons').show();
+          $('.delete-buttons').show();
+          $('.cancel-buttons').hide();
+          $('.confirm-buttons').hide();
+          $('#records-table input').attr('readonly', true);
+        }
+      }
+
+      // getPatientRecords().then(records => {
+      //   var labels = records.map(record => record.date);
+      //   var bloodGlucoseLevels = records.map(record => record.bloodGlucoseLevel);
+      //   var carbIntakes = records.map(record => record.carbIntake);
+
+      //   renderChart(labels, bloodGlucoseLevels, carbIntakes);
+      // });
+
+
+      function renderChart(labels, dataSet1, dataSet2) {
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = Chart.getChart(ctx);
+        if (chart)
+          chart.destroy();
+        var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels, // Array of labels (x-axis)
+            datasets: [
+              {
+                label: 'Blood Glucose Level',
+                data: dataSet1, // Array of data values for the first line
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              },
+              {
+                label: 'Carb Intake',
+                data: dataSet2, // Array of data values for the second line
+                fill: false,
+                borderColor: 'rgb(255, 99, 132)',
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+
+      $(document).ready(function () {
+        $('#filter-btn').click(function () {
+          var startDate = $('#from-date').val();
+          var endDate = $('#to-date').val();
+          refreshRecordTable(startDate, endDate);
+        });
+      });
+    });
+
+  </script>
+</body>
+
+</html>

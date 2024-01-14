@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./function-management.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <form class="login-form" id="loginForm">
+      <h1>Login</h1>
+      <div class="form-control">
+        <input type="text" id="username" placeholder="Username">
+      </div>
+      <div class="form-control">
+        <input type="password" id="password" placeholder="Password">
+      </div>
+      <div class="form-control">
+        <button type="submit">Log In</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="function-management.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var username = document.getElementById('username').value;
+      var password = document.getElementById('password').value;
+
+      loginUser(username, password);
+    });
+  </script>
+</body>
+</html>

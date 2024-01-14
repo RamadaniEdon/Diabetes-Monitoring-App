@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patients Management</title>
+  <script src="https://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./function-management.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Add your CSS styling here */
+    .selected {
+      background-color: yellow;
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <nav class="nav">
+      <ul>
+        <li><a href="patients.html">Patients</a></li>
+        <li><a href="medications.html">Medications</a></li>
+        <li><a href="users.html">Users</a></li>
+      </ul>
+    </nav>
+    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+  </aside>
+  <main class="main-content">
+    <h1>Patients</h1>
+    <table id="patientsTable" class="patients-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Physician</th>
+          <th>Actions</th>
+        </tr>
+        <tr id="addPatientMenu"> <!-- New row for adding patients -->
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+
+        </tr>
+        <!-- More rows as needed -->
+      </tbody>
+    </table>
+
+  </main>
+  <script>
+
+    $(document).ready(function () {
+      var selectedPatientId = null;
+      var isAdmin = false;
+
+      getMyProfile().then(user => {
+        if (user.role == "ADMIN") {
+          isAdmin = true;
+          $('#addPatientMenu').html(`<td></td> <!-- Empty cell for ID, as it's probably auto-generated -->
+          <td><input type="text" id="name" placeholder="Name"></td>
+          <td><input type="number" id="age" placeholder="Age"></td>
+          <td>
+            <select id="gender">
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </td>
+          <td><input type="number" id="userId" placeholder="Physician ID"></td>
+          <td>
+            <button id="addPatient" class="add-btn">Add Patient</button>
+          </td>`)
+        }
+        $('#patientsTable').on('click', '.patient-row', function () {
+            $('#patientsTable tr').removeClass('selected');
+            $(this).addClass('selected');
+            selectedPatientId = $(this).data('patientId');
+
+
+
+            var patientName = $(this).children('td').eq(1).text();
+            var patientAge = $(this).children('td').eq(2).text();
+            var patientGender = $(this).children('td').eq(3).text();
+            var patiendPhysicianId = $(this).children('td').eq(4).text();
+
+            $('#addPatient').text('Update Patient').attr('id', 'updatePatient');
+
+            $('#name').val(patientName);
+            $('#age').val(patientAge);
+            $('#gender').val(patientGender);
+            $('#userId').val(patiendPhysicianId);
+          });
+
+          $('#addPatient').on("click", this, function (e) {
+            e.preventDefault();
+            var patientData = {
+              name: $('#name').val(),
+              age: parseInt($('#age').val(), 10),
+              gender: $('#gender').val(),
+              userId: parseInt($('#userId').val())
+
+            };
+
+            if (selectedPatientId) {
+              updatePatient(selectedPatientId, patientData).then(() => {
+                refreshPatientTable();
+                clearForm();
+                $('#updatePatient').text('Add Patient').attr('id', 'addPatient');
+              });
+            } else {
+              addPatient(patientData).then(() => {
+                refreshPatientTable();
+                clearForm();
+              });
+            }
+          });
+
+          $('#patientsTable').on('click', '.delete-btn', function () {
+            var patientRow = $(this).closest('.patient-row');
+            var patientId = patientRow.data('patientId');
+
+            if (patientId) {
+              deletePatient(patientId).then(() => {
+                refreshPatientTable();
+              });
+            } else {
+              alert('No patient ID found for deletion.');
+            }
+          });
+
+
+          $('#patientsTable').on('click', '.edit-btn', function () {
+            var patientRow = $(this).closest('.patient-row');
+            selectedPatientId = patientRow.data('patientId');
+
+            if (selectedPatientId) {
+              var patientName = patientRow.find('td').eq(1).text(); // Index 1 for Name
+              var patientAge = patientRow.find('td').eq(2).text(); // Index 2 for Age
+              var patientGender = patientRow.find('td').eq(3).text(); // Index 3 for Gender
+
+              // Populate the form fields
+              $('#name').val(patientName);
+              $('#age').val(patientAge);
+              $('#gender').val(patientGender);
+
+              // Change 'Add Patient' button to 'Update Patient'
+              $('#addPatient').text('Update Patient').attr('id', 'updatePatient');
+            } else {
+              alert('No patient selected for update.');
+            }
+          });
+
+          // Handling the click event for updating a patient
+          $(document).on('click', '#updatePatient', function () {
+            var patientData = {
+              name: $('#name').val(),
+              age: parseInt($('#age').val(), 10),
+              gender: $('#gender').val(),
+
+            };
+
+            updatePatient(selectedPatientId, patientData).then(() => {
+              refreshPatientTable();
+              clearForm();
+
+              // Change 'Update Patient' button back to 'Add Patient'
+              $('#updatePatient').text('Add Patient').attr('id', 'addPatient');
+            })
+          });
+
+
+      })
+
+      function refreshPatientTable() {
+        getAllPatients().then(patients => {
+          var rows;
+          if (isAdmin)
+            rows = patients.map(p =>
+
+              `<tr data-patient-id="${p.patientId}" class="patient-row">
+                 <td>${p.patientId}</td>
+                 <td>${p.name}</td>
+                 <td>${p.age}</td>
+                 <td>${p.gender}</td>
+                 <td>${p.userId}</td>
+                 <td>
+                      <button class="edit-btn">Edit</button>
+                      <button class="delete-btn">Delete</button>
+                      <a href="./patient-detail.html?data=${p.patientId}"><button class="view-btn">View</button></a>
+                    </td>
+             </tr>`
+            ).join('');
+          else
+            rows = patients.map(p =>
+              `<tr data-patient-id="${p.patientId}" class="patient-row">
+                 <td>${p.patientId}</td>
+                 <td>${p.name}</td>
+                 <td>${p.age}</td>
+                 <td>${p.gender}</td>
+                 <td>${p.userId}</td>
+                 <td>
+                      <a href="./patient-detail.html?data=${p.patientId}"><button class="view-btn">View</button></a>
+                    </td>
+             </tr>`).join('');
+          $('#patientsTable tbody').html(rows);
+
+          
+        });
+      }
+
+
+
+      function clearForm() {
+        $('#name').val('');
+        $('#age').val('');
+        $('#gender').val('');
+        $('#userId').val('');
+        selectedPatientId = null;
+        $('#patientsTable tr').removeClass('selected');
+      }
+
+      refreshPatientTable();
+    });
+
+
+
+  </script>
+</body>
+
+</html>

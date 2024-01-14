@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql-container:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mydb.sql:/docker-entrypoint-initdb.d/mydb.sql
+
+  adminer-container:
+    image: adminer:latest
+    ports:
+      - "9001:8080"
+    depends_on:
+      - mysql-container
