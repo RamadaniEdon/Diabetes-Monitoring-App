@@ -37,7 +37,7 @@ public class AuthenticationFilter implements jakarta.ws.rs.container.ContainerRe
     private ResourceInfo resourceInfo;
 
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
-    private static final String AUTHENTICATION_SCHEME = "Bearer";
+    public static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
