@@ -23,7 +23,7 @@ const endpoints = {
 // Get all users
 function getAllUsers() {
     return $.ajax({
-        url: apiBaseUrl + userEndpoints.users,
+        url: apiBaseUrl + endpoints.users,
         type: 'GET',
         dataType: 'json',
         success: function(users) {
@@ -38,7 +38,7 @@ function getAllUsers() {
 // Add a new user
 function addUser(userData) {
     return $.ajax({
-        url: apiBaseUrl + userEndpoints.users,
+        url: apiBaseUrl + endpoints.users,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(userData),
@@ -54,7 +54,7 @@ function addUser(userData) {
 // Update an existing user
 function updateUser(userId, userData) {
     return $.ajax({
-        url: apiBaseUrl + userEndpoints.userById(userId),
+        url: apiBaseUrl + endpoints.userById(userId),
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(userData),
@@ -70,7 +70,7 @@ function updateUser(userId, userData) {
 // Delete a user
 function deleteUser(userId) {
     return $.ajax({
-        url: apiBaseUrl + userEndpoints.userById(userId),
+        url: apiBaseUrl + endpoints.userById(userId),
         type: 'DELETE',
         success: function() {
             alert('User deleted successfully!');
@@ -84,7 +84,7 @@ function deleteUser(userId) {
 // Get a single user by ID
 function getUser(userId) {
     return $.ajax({
-        url: apiBaseUrl + userEndpoints.userById(userId),
+        url: apiBaseUrl + endpoints.userById(userId),
         type: 'GET',
         dataType: 'json',
         success: function(user) {
@@ -99,7 +99,7 @@ function getUser(userId) {
 // User login
 function loginUser(userData) {
     return $.ajax({
-        url: apiBaseUrl + userEndpoints.loginUser,
+        url: apiBaseUrl + endpoints.loginUser,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(userData),
@@ -214,7 +214,7 @@ function addMedication(medicationData) {
             alert('Medication added successfully!');
         },
         error: function(xhr) {
-            alert('Error adding medication: ' + xhr.status + ' ' + xhr.responseText);
+            alert('Error adding MED: ' + xhr.status + ' ' + xhr.responseText);
         }
     });
 }
@@ -267,7 +267,7 @@ function getMedication(medicationId) {
 // Get all daily records
 function getAllDailyRecords() {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.dailyRecords,
+        url: apiBaseUrl + endpoints.dailyRecords,
         type: 'GET',
         dataType: 'json',
         success: function(records) {
@@ -282,7 +282,7 @@ function getAllDailyRecords() {
 // Add a new daily record
 function addDailyRecord(recordData) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.dailyRecords,
+        url: apiBaseUrl + endpoints.dailyRecords,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(recordData),
@@ -298,7 +298,7 @@ function addDailyRecord(recordData) {
 // Update an existing daily record
 function updateDailyRecord(recordId, recordData) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.dailyRecordById(recordId),
+        url: apiBaseUrl + endpoints.dailyRecordById(recordId),
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(recordData),
@@ -314,7 +314,7 @@ function updateDailyRecord(recordId, recordData) {
 // Delete a daily record
 function deleteDailyRecord(recordId) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.dailyRecordById(recordId),
+        url: apiBaseUrl + endpoints.dailyRecordById(recordId),
         type: 'DELETE',
         success: function() {
             alert('Daily record deleted successfully!');
@@ -328,7 +328,7 @@ function deleteDailyRecord(recordId) {
 // Get a single daily record by ID
 function getDailyRecord(recordId) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.dailyRecordById(recordId),
+        url: apiBaseUrl + endpoints.dailyRecordById(recordId),
         type: 'GET',
         dataType: 'json',
         success: function(record) {
@@ -345,7 +345,7 @@ function getDailyRecord(recordId) {
 // Get daily records within a specified period
 function getDailyRecordsInPeriod(startDate, endDate) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.dailyRecordsInPeriod,
+        url: apiBaseUrl + endpoints.dailyRecordsInPeriod,
         type: 'GET',
         data: { startDate: startDate, endDate: endDate },
         dataType: 'json',
@@ -361,7 +361,7 @@ function getDailyRecordsInPeriod(startDate, endDate) {
 // Get the average blood glucose level over a specified period
 function getAverageBloodGlucose(startDate, endDate) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.averageBloodGlucose,
+        url: apiBaseUrl + endpoints.averageBloodGlucose,
         type: 'GET',
         data: { startDate: startDate, endDate: endDate },
         dataType: 'json',
@@ -377,7 +377,7 @@ function getAverageBloodGlucose(startDate, endDate) {
 // Get the average carb intake over a specified period
 function getAverageCarbIntake(startDate, endDate) {
     return $.ajax({
-        url: apiBaseUrl + dailyRecordEndpoints.averageCarbIntake,
+        url: apiBaseUrl + endpoints.averageCarbIntake,
         type: 'GET',
         data: { startDate: startDate, endDate: endDate },
         dataType: 'json',
