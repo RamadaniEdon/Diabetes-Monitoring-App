@@ -1,5 +1,5 @@
 // Base URL for the REST API
-const apiBaseUrl = '/rest';
+let apiBaseUrl = '/rest';
 
 // Endpoints relative to the base URL
 const endpoints = {
