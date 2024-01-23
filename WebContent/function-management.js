@@ -1,6 +1,6 @@
 
 // Base URL for the REST API
-const apiBaseUrl = 'http://localhost:8080/MyWebsite-0.0.1-SNAPSHOT/rest';
+const apiBaseUrl = '/rest';
 
 // Endpoints relative to the base URL
 const endpoints = {
