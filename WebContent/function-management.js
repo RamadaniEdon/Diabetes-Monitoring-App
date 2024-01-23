@@ -1,4 +1,3 @@
-
 // Base URL for the REST API
 const apiBaseUrl = '/rest';
 
