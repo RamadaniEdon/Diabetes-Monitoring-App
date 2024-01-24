@@ -9,6 +9,6 @@ public class CustomApplication extends ResourceConfig
 	{
 		packages("city.org.rs");
 
-		register(AuthenticationFilter.class);
+		// register(AuthenticationFilter.class);
 	}
 }
