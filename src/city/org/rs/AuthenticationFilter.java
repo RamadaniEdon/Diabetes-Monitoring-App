@@ -30,7 +30,7 @@ import java.util.Date;
  * This filter verify the access permissions for a user
  * based on username and passowrd provided in request
  */
-// @Provider
+@Provider
 public class AuthenticationFilter implements jakarta.ws.rs.container.ContainerRequestFilter {
 
     @Context
