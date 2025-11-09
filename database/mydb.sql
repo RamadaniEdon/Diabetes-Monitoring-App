@@ -2,7 +2,7 @@
 -- CREATE DATABASE mydb;
 
 -- Use the created database
-USE mydb;
+USE pesyjzyyer5847fj;
 
 -- Create Users table
 CREATE TABLE Users (

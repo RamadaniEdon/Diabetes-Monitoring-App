@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class ConnectionUtility {
 
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/mydb";
-    private static final String DATABASE_USER = "admin";
-    private static final String DATABASE_PASSWORD = "mysql";
+    private static final String DATABASE_URL = "jdbc:mysql://ulsq0qqx999wqz84.chr7pe7iynqr.eu-west-1.rds.amazonaws.com/q0fj4bznvkv1i07p";
+    private static final String DATABASE_USER = "uk2ohr5z3gqfvdx9";
+    private static final String DATABASE_PASSWORD = "so5mxyl7repobm1l";
 
     // private static final String DATABASE_URL = "jdbc:mysql://r6ze0q02l4me77k3.chr7pe7iynqr.eu-west-1.rds.amazonaws.com/kqkeb9e5irew8xi1";
     // private static final String DATABASE_USER = "vxsnasuvirkou9jo";
